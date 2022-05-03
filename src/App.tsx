@@ -11,6 +11,8 @@ import Header from './components/Header'
 import Registration from './pages/Registration'
 import Confirmation from './pages/Confirmation'
 import Login from './pages/Login'
+import AddCreationForm from './pages/AddCreationForm'
+import AddsList from './pages/AddsList'
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   if (!localStorage.getItem(token)) {
@@ -25,19 +27,12 @@ const App: FC = () => {
       <CssBaseline />
       <Header />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <RequireAuth>
-              <div>Test</div>
-            </RequireAuth>
-          }
-        />
+        <Route path="/" element={<AddsList />} />
         <Route
           path="/create-ad"
           element={
             <RequireAuth>
-              <div>Create add</div>
+              <AddCreationForm />
             </RequireAuth>
           }
         />

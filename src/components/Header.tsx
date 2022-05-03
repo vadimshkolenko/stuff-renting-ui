@@ -16,24 +16,40 @@ import {
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import AddIcon from '@mui/icons-material/Add'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../store/configureStore'
+import { logout } from '../store/slices/accountSlice'
+import { useNavigate } from 'react-router-dom'
+
+const settings = [
+  { name: 'Мои вещи' },
+  { name: 'Мои заказы' },
+  { name: 'Настройки' },
+  { name: 'Выход', action: 'logout' },
+]
 
 const Header: FC = () => {
-  const settings = [
-    { name: 'Мои вещи' },
-    { name: 'Мои заказы' },
-    { name: 'Настройки' },
-    { name: 'Выход' },
-  ]
-
+  const dispatch = useDispatch()
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   )
+  const navigate = useNavigate()
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = async (action) => {
+    console.log('ACTION', action)
+    switch (action) {
+      case 'logout':
+        await dispatch(logout())
+        navigate('/login')
+        break
+      default:
+        console.log('default')
+    }
+
     setAnchorElUser(null)
   }
 
@@ -103,7 +119,10 @@ const Header: FC = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting.name}
+                  onClick={() => handleCloseUserMenu(setting.action)}
+                >
                   <Typography textAlign="center">{setting.name}</Typography>
                 </MenuItem>
               ))}
