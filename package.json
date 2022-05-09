@@ -17,6 +17,7 @@
     "@types/react": "^18.0.2",
     "@types/react-dom": "^18.0.0",
     "axios": "^0.26.1",
+    "moment": "^2.29.3",
     "object-to-formdata": "^4.4.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

@@ -26,12 +26,12 @@ const AddCreationForm: FC = () => {
   const price = useInput('')
   const deposit = useInput('')
   const description = useInput('')
+  const assessedValue = useInput('')
 
-  const userId = useSelector((state: RootState) => state.account.userId)
+  const UserId = useSelector((state: RootState) => state.account.UserId)
 
   const createAddCallback = async (data) => {
     setLoading(true)
-    console.log('DATA', data)
     try {
       await createAddQuery(data)
       setSuccess(true)
@@ -57,8 +57,9 @@ const AddCreationForm: FC = () => {
         name: name.value,
         price: price.value,
         deposit: deposit.value,
+        assessedValue: assessedValue.value,
         description: description.value,
-        userId,
+        UserId,
       },
       options
     )
@@ -84,9 +85,7 @@ const AddCreationForm: FC = () => {
   //   )
   // }
 
-  const onChange = (imageList, addUpdateIndex) => {
-    // data for submit
-    // console.log(imageList, addUpdateIndex)
+  const onChange = (imageList) => {
     setImages(imageList)
   }
 
@@ -145,6 +144,20 @@ const AddCreationForm: FC = () => {
           margin="normal"
           required
           fullWidth
+          label="Оценочная стоимость"
+          name="assessedValue"
+          autoComplete="assessedValue"
+          autoFocus
+          type="text"
+          id="assessedValue"
+          value={assessedValue.value}
+          onChange={assessedValue.onChange}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
           label="Описание"
           name="description"
           autoComplete="description"
@@ -167,7 +180,7 @@ const AddCreationForm: FC = () => {
             imageList,
             onImageUpload,
             onImageRemove,
-            isDragging,
+            // isDragging,
             dragProps,
           }) => (
             // write your building UI

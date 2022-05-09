@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { confirmQuery } from '../services'
-import { token as tokenKey, userId } from '../static'
+import { token as tokenKey, UserId } from '../static'
 import { setUserData, login } from '../store/slices/accountSlice'
 import { RootState } from '../store/configureStore'
 

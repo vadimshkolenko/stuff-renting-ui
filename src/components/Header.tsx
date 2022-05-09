@@ -40,7 +40,6 @@ const Header: FC = () => {
   }
 
   const handleCloseUserMenu = async (action) => {
-    console.log('ACTION', action)
     switch (action) {
       case 'logout':
         await dispatch(logout())
@@ -57,14 +56,16 @@ const Header: FC = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-            SOUTH STUFF
-          </Typography>
+          <NavLink to={'/'} style={{ textDecoration: 'none', color: 'white' }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            >
+              SOUTH STUFF
+            </Typography>
+          </NavLink>
           <Box
             sx={{
               flexGrow: 1,

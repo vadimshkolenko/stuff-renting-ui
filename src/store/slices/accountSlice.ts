@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { token as tokenKey, token, userId } from '../../static'
+import { token as tokenKey, token, UserId } from '../../static'
 import { logoutQuery } from '../../services'
 
 const initialState = {
   token: localStorage.getItem(token) ?? '',
-  userId: localStorage.getItem(userId) ?? '',
+  UserId: localStorage.getItem(UserId) ?? '',
 }
 
 const accountSlice = createSlice({
@@ -14,7 +14,7 @@ const accountSlice = createSlice({
     setUserData: (state, action) => {
       const { accessToken, id } = action.payload
       state.token = accessToken
-      state.userId = id
+      state.UserId = id
     },
   },
 })
@@ -24,7 +24,7 @@ export const login = (queryCallback, setErrorCallback) => async (dispatch) => {
     const response = await queryCallback()
     const { token: accessToken, id } = response.data
     localStorage.setItem(tokenKey, accessToken)
-    localStorage.setItem(userId, id)
+    localStorage.setItem(UserId, id)
     dispatch(setUserData({ accessToken, id }))
   } catch (err) {
     setErrorCallback(err.error ?? 'Ошибка!')

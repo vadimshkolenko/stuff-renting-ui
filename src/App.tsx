@@ -13,6 +13,7 @@ import Confirmation from './pages/Confirmation'
 import Login from './pages/Login'
 import AddCreationForm from './pages/AddCreationForm'
 import AddsList from './pages/AddsList'
+import AddDetail from './pages/AddDetail'
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   if (!localStorage.getItem(token)) {
@@ -36,6 +37,7 @@ const App: FC = () => {
             </RequireAuth>
           }
         />
+        <Route path="/ad/:adId" element={<AddDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/confirm/:verificationToken" element={<Confirmation />} />
