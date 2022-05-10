@@ -1,6 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getAdQuery } from '../../services'
 
+export interface AddData {
+  description: string
+  name: string
+  price: number
+  deposit: string
+  assessedValue: string
+  Images: Array<any>
+  UserId: number
+}
+
 const initialState = {
   errorMessage: null,
   isLoading: false,
@@ -11,7 +21,6 @@ const initialState = {
     deposit: '',
     assessedValue: '',
     Images: [],
-    // count: 0,
   },
 }
 

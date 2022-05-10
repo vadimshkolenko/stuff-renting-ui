@@ -17,3 +17,11 @@ export const getAddsQuery = () => api.get('/getAdds')
 export const getAdQuery = (id) => api.get(`/getAdDetail/${id}`)
 
 export const requestDealQuery = (dealData) => api.post('/createDeal', dealData)
+
+export const getDealsQuery = (role, id) => api.get(`/getDeals/${role}/${id}`)
+
+export const changeDealStatusQuery = (approveData) =>
+  api.patch('/changeDealStatus', approveData)
+
+export const cancelDealRequestQuery = (id) =>
+  api.delete(`/cancelDealRequest/${id}`)

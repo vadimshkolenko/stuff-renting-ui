@@ -8,7 +8,6 @@ import {
   Grid,
   TextField,
   Typography,
-  CardMedia,
   Chip,
 } from '@material-ui/core'
 import Stack from '@mui/material/Stack'
@@ -17,6 +16,7 @@ import { useParams } from 'react-router-dom'
 import { getAd } from '../store/slices/adDetailSlice'
 import moment from 'moment'
 import { requestDealQuery } from '../services'
+import StuffInfo from '../components/StuffInfo'
 
 const AdDetail: FC = () => {
   const dispatch = useDispatch()
@@ -72,6 +72,7 @@ const AdDetail: FC = () => {
       renterId: UserId,
       price: computedPrice,
       landlordId: data.UserId,
+      name: data.name,
     })
   }
 
@@ -87,30 +88,7 @@ const AdDetail: FC = () => {
     <Container component="main" maxWidth="lg">
       <Box sx={{ flexGrow: 1 }} mt={10}>
         <Grid container spacing={2}>
-          <Grid item xs={8}>
-            <CardMedia
-              component="img"
-              height="500"
-              image={`http://localhost:8080/${data.Images?.[0]?.filename}`}
-              alt="stuff"
-            />
-            <Box
-              sx={{
-                flexGrow: 1,
-                bgcolor: 'white',
-                padding: '20px',
-                borderRadius: 8,
-              }}
-              mt={2}
-            >
-              <Typography gutterBottom variant="h5" component="h3">
-                Информация о вещи
-              </Typography>
-              <Typography gutterBottom variant="body1" component="p">
-                {data.description}
-              </Typography>
-            </Box>
-          </Grid>
+          <StuffInfo data={data} />
           <Grid item xs={4}>
             <Box
               component="form"
@@ -148,14 +126,6 @@ const AdDetail: FC = () => {
                 </Stack>
               </Box>
               <Box mt={3}>
-                {/*TODO*/}
-                {/*<Typography gutterBottom variant="h6" component="p">*/}
-                {/*  Кол-во*/}
-                {/*</Typography>*/}
-                {/*/!*TODO*!/*/}
-                {/*<Typography gutterBottom variant="h6" component="p">*/}
-                {/*  Доступно штук: {data.count}*/}
-                {/*</Typography>*/}
                 <Typography gutterBottom variant="h6" component="p">
                   Дата аренды
                 </Typography>
