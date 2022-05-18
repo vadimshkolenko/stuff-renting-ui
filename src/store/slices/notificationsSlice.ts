@@ -3,8 +3,17 @@ import {
   getCountOfUnreadNotificationsQuery,
   getNotificationsQuery,
 } from '../../services'
+import { Notification } from '../../interfaces/notifications'
 
-const initialState = {
+interface State {
+  errorMessage?: string
+  isLoading: boolean
+  success: boolean
+  unreadCount: number
+  data: Array<Notification>
+}
+
+const initialState: State = {
   errorMessage: null,
   isLoading: false,
   success: false,
@@ -16,20 +25,20 @@ const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
-    setNotificationsData: (state, action) => {
+    setNotificationsData: (state, action: { payload: Array<Notification> }) => {
       state.data = action.payload
       state.unreadCount = 0
     },
-    setError: (state, action) => {
+    setError: (state, action: { payload: string }) => {
       state.errorMessage = action.payload
     },
-    setLoading: (state, action) => {
+    setLoading: (state, action: { payload: boolean }) => {
       state.isLoading = action.payload
     },
-    setCount: (state, action) => {
+    setCount: (state, action: { payload: number }) => {
       state.unreadCount = action.payload
     },
-    setSuccess: (state, action) => {
+    setSuccess: (state, action: { payload: boolean }) => {
       state.success = action.payload
     },
     clearData: (state) => {

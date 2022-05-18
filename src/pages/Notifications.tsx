@@ -10,9 +10,6 @@ import {
 } from '@material-ui/core'
 import { RootState } from '../store/configureStore'
 import { getNotifications, clearData } from '../store/slices/notificationsSlice'
-import Loader from '../components/Loader'
-import ErrorMessage from '../components/ErrorMessage'
-import EmptyData from '../components/EmptyData'
 import ContentWrapper from '../components/ContentWrapper'
 
 const Notifications: FC = () => {
