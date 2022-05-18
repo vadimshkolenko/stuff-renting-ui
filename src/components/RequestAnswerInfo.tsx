@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Typography } from '@material-ui/core'
 
-const ContentWrapper = ({ content }: { content: JSX.Element }) => (
+const RequestAnswerInfo = ({ content }: { content: JSX.Element }) => (
   <Box
     sx={{
       display: 'flex',
@@ -16,4 +16,4 @@ const ContentWrapper = ({ content }: { content: JSX.Element }) => (
   </Box>
 )
 
-export default ContentWrapper
+export default RequestAnswerInfo
