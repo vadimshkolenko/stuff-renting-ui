@@ -14,7 +14,6 @@ export interface AddData {
 const initialState = {
   errorMessage: null,
   isLoading: false,
-  success: false,
   data: {
     description: '',
     name: '',
@@ -43,9 +42,6 @@ const adDetailSlice = createSlice({
       state = initialState
       return state
     },
-    setSuccess: (state, action) => {
-      state.success = action.payload
-    },
   },
 })
 
@@ -55,7 +51,6 @@ export const getAd = (id) => async (dispatch) => {
     const response = await getAdQuery(id)
     const { data } = response.data
     dispatch(setAdData(data))
-    dispatch(setSuccess(true))
   } catch (err) {
     dispatch(setError(err.error ?? 'Ошибка!'))
   } finally {
@@ -63,7 +58,7 @@ export const getAd = (id) => async (dispatch) => {
   }
 }
 
-export const { setAdData, setError, setLoading, setSuccess, clearData } =
+export const { setAdData, setError, setLoading, clearData } =
   adDetailSlice.actions
 
 export default adDetailSlice.reducer

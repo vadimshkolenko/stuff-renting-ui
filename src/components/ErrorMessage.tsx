@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box, Typography } from '@material-ui/core'
+import { Box } from '@material-ui/core'
+import ErrorText from './ErrorText'
 
 const ErrorMessage = ({ message }) => {
   return (
@@ -11,9 +12,7 @@ const ErrorMessage = ({ message }) => {
         height: '30vh',
       }}
     >
-      <Typography variant="subtitle1" component="p" color="error">
-        {message}
-      </Typography>
+      <ErrorText text={message} />
     </Box>
   )
 }

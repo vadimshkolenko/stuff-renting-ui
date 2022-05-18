@@ -12,22 +12,21 @@ import {
 } from '@material-ui/core'
 import Stack from '@mui/material/Stack'
 import { RootState } from '../store/configureStore'
-import { useParams } from 'react-router-dom'
-import { getAd } from '../store/slices/adDetailSlice'
+import { NavLink, useParams } from 'react-router-dom'
+import { getAd, clearData } from '../store/slices/adDetailSlice'
 import moment from 'moment'
 import { requestDealQuery } from '../services'
 import StuffInfo from '../components/StuffInfo'
+import ContentWrapper from '../components/ContentWrapper'
+import ErrorText from '../components/ErrorText'
 
 const AdDetail: FC = () => {
   const dispatch = useDispatch()
   const { adId } = useParams<{ adId: string }>()
   const { UserId } = useSelector((state: RootState) => state.account)
-  const {
-    isLoading,
-    errorMessage,
-    data,
-    success: detailLoadingSuccess,
-  } = useSelector((state: RootState) => state.adDetail)
+  const { isLoading, errorMessage, data } = useSelector(
+    (state: RootState) => state.adDetail
+  )
   const dateStart = useInput(moment().format('YYYY-MM-DD'))
   const dateEnd = useInput(moment().add(1, 'days').format('YYYY-MM-DD'))
   const [bookingIsSending, setBookingSending] = useState(false)
@@ -46,8 +45,10 @@ const AdDetail: FC = () => {
     }
   }, [dateStart, dateEnd])
 
-  useEffect(() => {
+  useEffect((): (() => void) => {
     dispatch(getAd(adId))
+
+    return () => dispatch(clearData())
   }, [adId, getAd])
 
   const createDealCallback = async (data) => {
@@ -79,106 +80,128 @@ const AdDetail: FC = () => {
     })
   }
 
-  if (errorMessage) {
-    return <p>{errorMessage}</p>
-  }
-
-  if (isLoading || bookingIsSending) {
-    return <div>Подождите, пожалуйста...</div>
+  if (bookingSuccess) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '30vh',
+        }}
+      >
+        <Typography gutterBottom variant="h6" component="p">
+          Ваш запрос на бронирование был успешно отправлен арендодателю!
+          <br /> Вы можете посмотреть свои запросы на аренду в разделе{' '}
+          <NavLink to={'/deals'}>Мои сделки</NavLink>.
+        </Typography>
+      </Box>
+    )
   }
 
   return (
     <Container component="main" maxWidth="lg">
-      <Box sx={{ flexGrow: 1 }} mt={10}>
-        <Grid container spacing={2}>
-          <StuffInfo data={data} />
-          <Grid item xs={4}>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              sx={{
-                flexGrow: 1,
-                bgcolor: 'white',
-                padding: '20px',
-                borderRadius: 8,
-              }}
-            >
-              <Typography gutterBottom variant="h5" component="h1">
-                {data.name}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="p"
-                style={{ fontWeight: 600 }}
-              >
-                {data.price}₽/сутки
-              </Typography>
-              <Box mt={2}>
-                <Stack direction="row" spacing={1}>
-                  <Chip
-                    color="success"
-                    label={
-                      data.deposit ? `Залог ${data.deposit}₽` : 'Без залога'
-                    }
-                  />
-                  <Chip
-                    color="success"
-                    label={`Оценочная стоимость ${data.assessedValue}₽`}
-                  />
-                </Stack>
-              </Box>
-              {/*TODO исправить типы данных*/}
-              {+data.UserId !== +UserId && (
-                <>
-                  <Box mt={3}>
-                    <Typography gutterBottom variant="h6" component="p">
-                      Дата аренды
-                    </Typography>
-                    <Stack spacing={1} direction="row">
-                      <TextField
-                        id="dateStart"
-                        label="Начало аренды"
-                        type="date"
-                        value={dateStart.value}
-                        onChange={dateStart.onChange}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
+      <ContentWrapper
+        isLoading={isLoading}
+        errorMessage={errorMessage}
+        contentGeneratorCallback={() => (
+          <Box sx={{ flexGrow: 1 }} mt={10}>
+            <Grid container spacing={2}>
+              <StuffInfo data={data} />
+              <Grid item xs={4}>
+                <Box
+                  component="form"
+                  onSubmit={handleSubmit}
+                  sx={{
+                    flexGrow: 1,
+                    bgcolor: 'white',
+                    padding: '20px',
+                    borderRadius: 8,
+                  }}
+                >
+                  <Typography gutterBottom variant="h5" component="h1">
+                    {data.name}
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="p"
+                    style={{ fontWeight: 600 }}
+                  >
+                    {data.price}₽/сутки
+                  </Typography>
+                  <Box mt={2}>
+                    <Stack direction="row" spacing={1}>
+                      <Chip
+                        color="success"
+                        label={
+                          data.deposit ? `Залог ${data.deposit}₽` : 'Без залога'
+                        }
                       />
-                      <TextField
-                        id="dateEnd"
-                        label="Конец аренды"
-                        type="date"
-                        value={dateEnd.value}
-                        onChange={dateEnd.onChange}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
+                      <Chip
+                        color="success"
+                        label={`Оценочная стоимость ${data.assessedValue}₽`}
                       />
                     </Stack>
                   </Box>
-                  <Box mt={2}>
-                    <Typography gutterBottom variant="h6" component="p">
-                      Итого: {computedPrice}₽
-                    </Typography>
-                  </Box>
-                  <Box mt={2}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      // disabled={isLoading}
-                      type="submit"
-                    >
-                      Забронировать
-                    </Button>
-                  </Box>
-                </>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+                  {/*TODO исправить типы данных*/}
+                  {+data.UserId !== +UserId && (
+                    <>
+                      <Box mt={3}>
+                        <Typography gutterBottom variant="h6" component="p">
+                          Дата аренды
+                        </Typography>
+                        <Stack spacing={1} direction="row">
+                          <TextField
+                            id="dateStart"
+                            label="Начало аренды"
+                            type="date"
+                            value={dateStart.value}
+                            onChange={dateStart.onChange}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                          />
+                          <TextField
+                            id="dateEnd"
+                            label="Конец аренды"
+                            type="date"
+                            value={dateEnd.value}
+                            onChange={dateEnd.onChange}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                          />
+                        </Stack>
+                      </Box>
+                      <Box mt={2}>
+                        <Typography gutterBottom variant="h6" component="p">
+                          Итого: {computedPrice}₽
+                        </Typography>
+                      </Box>
+                      <Box mt={2}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          disabled={bookingIsSending}
+                          type="submit"
+                        >
+                          Забронировать
+                        </Button>
+                        {bookingError && (
+                          <Box mt={2}>
+                            <ErrorText text={bookingError} />
+                          </Box>
+                        )}
+                      </Box>
+                    </>
+                  )}
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        )}
+      />
     </Container>
   )
 }

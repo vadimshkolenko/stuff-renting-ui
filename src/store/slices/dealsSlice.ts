@@ -7,8 +7,9 @@ import {
 import { renter } from '../../static'
 
 const initialState = {
-  errorMessage: null,
-  isLoading: false,
+  dealsErrorMessage: null,
+  dealsLoading: false,
+  dealsLoadingSuccess: false,
   renterDeals: [],
   landlordDeals: [],
 }
@@ -19,25 +20,24 @@ const dealsSlice = createSlice({
   name: 'deals',
   initialState,
   reducers: {
-    setRenterDealsData: (state, action) => {
+    setRenterDeals: (state, action) => {
       state.renterDeals = action.payload
     },
-    setLandlordDealsData: (state, action) => {
+    setLandlordDeals: (state, action) => {
       state.landlordDeals = action.payload
     },
-    setError: (state, action) => {
-      state.errorMessage = action.payload
+    setDealsErrorMessage: (state, action) => {
+      state.dealsErrorMessage = action.payload
     },
-    setLoading: (state, action) => {
-      state.isLoading = action.payload
+    setDealsLoadingSuccess: (state, action) => {
+      state.dealsLoadingSuccess = action.payload
     },
-    clearData: (state, action) => {
-      const role = action.payload
-      if (role === renter) {
-        state.renterDeals = []
-      } else {
-        state.landlordDeals = []
-      }
+    setDealsLoading: (state, action) => {
+      state.dealsLoading = action.payload
+    },
+    clearData: (state) => {
+      state = initialState
+      return state
     },
     changeStatus: (state, action) => {
       const { typeOfDeal, dealId, newStatus } = action.payload
@@ -54,19 +54,20 @@ const dealsSlice = createSlice({
 
 export const getDeals = (role: string) => async (dispatch, getState) => {
   const userId = getState().account.UserId
-  setLoading(true)
+  dispatch(setDealsLoading(true))
   try {
     const response = await getDealsQuery(role, userId)
     const { data } = response.data
     if (role === renter) {
-      dispatch(setRenterDealsData(data))
+      dispatch(setRenterDeals(data))
     } else {
-      dispatch(setLandlordDealsData(data))
+      dispatch(setLandlordDeals(data))
     }
+    dispatch(setDealsLoadingSuccess(true))
   } catch (err) {
-    dispatch(setError(err.error ?? 'Ошибка!'))
+    dispatch(setDealsErrorMessage(err.error ?? 'Ошибка!'))
   } finally {
-    dispatch(setLoading(false))
+    dispatch(setDealsLoading(false))
   }
 }
 
@@ -80,7 +81,6 @@ interface ChangeStatusData {
 export const changeDealStatus =
   ({ typeOfDeal, dealId, landlordId, newStatus }: ChangeStatusData) =>
   async (dispatch) => {
-    setLoading(true)
     try {
       await changeDealStatusQuery({
         dealId,
@@ -89,34 +89,30 @@ export const changeDealStatus =
       })
       dispatch(changeStatus({ typeOfDeal, dealId, newStatus }))
     } catch (err) {
-      dispatch(setError(err.error ?? 'Ошибка!'))
     } finally {
-      dispatch(setLoading(false))
     }
   }
 
 export const cancelDealRequest =
   ({ typeOfDeal, dealId }) =>
   async (dispatch) => {
-    setLoading(true)
     try {
       await cancelDealRequestQuery(dealId, typeOfDeal)
       dispatch(cancelDeal({ typeOfDeal, dealId }))
     } catch (err) {
-      dispatch(setError(err.error ?? 'Ошибка!'))
     } finally {
-      dispatch(setLoading(false))
     }
   }
 
 export const {
-  setLandlordDealsData,
-  setRenterDealsData,
-  setError,
-  setLoading,
+  setLandlordDeals,
+  setRenterDeals,
+  setDealsErrorMessage,
   clearData,
   changeStatus,
   cancelDeal,
+  setDealsLoadingSuccess,
+  setDealsLoading,
 } = dealsSlice.actions
 
 export default dealsSlice.reducer

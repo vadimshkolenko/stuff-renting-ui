@@ -19,6 +19,7 @@ import {
 import { renter, landlord } from '../static'
 import DealActionButtons from '../components/DealActionButtons'
 import { statusConverter } from '../utils/helpers'
+import ContentWrapper from '../components/ContentWrapper'
 
 const Deals: FC = () => {
   const dispatch = useDispatch()
@@ -27,19 +28,23 @@ const Deals: FC = () => {
   // 1 - renter
   const [value, setValue] = React.useState(0)
 
-  const { renterDeals, landlordDeals } = useSelector(
-    (state: RootState) => state.deals
-  )
+  const {
+    renterDeals,
+    landlordDeals,
+    dealsErrorMessage,
+    dealsLoading,
+    dealsLoadingSuccess,
+  } = useSelector((state: RootState) => state.deals)
 
-  useEffect(() => {
+  useEffect((): (() => void) => {
     if (value === 0) {
-      dispatch(clearData(renter))
       dispatch(getDeals(landlord))
     } else if (value === 1) {
-      dispatch(clearData(landlord))
       dispatch(getDeals(renter))
     }
-  }, [value, dispatch, getDeals])
+
+    return () => dispatch(clearData())
+  }, [value, dispatch, getDeals, clearData])
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -86,24 +91,38 @@ const Deals: FC = () => {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          {landlordDeals.map((deal) =>
-            cardGenerator({
-              role: 'landlord',
-              deal,
-              changeDealStatusCallback,
-              cancelDealRequestCallback,
-            })
-          )}
+          <ContentWrapper
+            isLoading={dealsLoading}
+            errorMessage={dealsErrorMessage}
+            isEmpty={!landlordDeals.length && dealsLoadingSuccess}
+            contentGeneratorCallback={() =>
+              landlordDeals.map((deal) =>
+                cardGenerator({
+                  role: 'landlord',
+                  deal,
+                  changeDealStatusCallback,
+                  cancelDealRequestCallback,
+                })
+              )
+            }
+          />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {renterDeals.map((deal) =>
-            cardGenerator({
-              role: 'renter',
-              deal,
-              changeDealStatusCallback,
-              cancelDealRequestCallback,
-            })
-          )}
+          <ContentWrapper
+            isLoading={dealsLoading}
+            errorMessage={dealsErrorMessage}
+            isEmpty={!renterDeals.length && dealsLoadingSuccess}
+            contentGeneratorCallback={() =>
+              renterDeals.map((deal) =>
+                cardGenerator({
+                  role: 'renter',
+                  deal,
+                  changeDealStatusCallback,
+                  cancelDealRequestCallback,
+                })
+              )
+            }
+          />
         </TabPanel>
       </Box>
     </Container>
