@@ -6,6 +6,14 @@ import {
 } from '../../services'
 import { renter } from '../../static'
 
+interface State {
+  dealsErrorMessage: string | null
+  dealsLoading: boolean
+  dealsLoadingSuccess: boolean
+  landlordDeals: Array<Deal>
+  renterDeals: Array<Deal>
+}
+
 const initialState = {
   dealsErrorMessage: null,
   dealsLoading: false,
@@ -20,32 +28,42 @@ const dealsSlice = createSlice({
   name: 'deals',
   initialState,
   reducers: {
-    setRenterDeals: (state, action) => {
+    setRenterDeals: (state: State, action: { payload: Array<Deal> }) => {
       state.renterDeals = action.payload
     },
-    setLandlordDeals: (state, action) => {
+    setLandlordDeals: (state: State, action: { payload: Array<Deal> }) => {
       state.landlordDeals = action.payload
     },
-    setDealsErrorMessage: (state, action) => {
+    setDealsErrorMessage: (state: State, action: { payload: string }) => {
       state.dealsErrorMessage = action.payload
     },
-    setDealsLoadingSuccess: (state, action) => {
+    setDealsLoadingSuccess: (state: State, action: { payload: boolean }) => {
       state.dealsLoadingSuccess = action.payload
     },
-    setDealsLoading: (state, action) => {
+    setDealsLoading: (state: State, action: { payload: boolean }) => {
       state.dealsLoading = action.payload
     },
-    clearData: (state) => {
+    clearData: (state: State) => {
       state = initialState
       return state
     },
-    changeStatus: (state, action) => {
+    changeStatus: (
+      state: State,
+      action: {
+        payload: { typeOfDeal: string; dealId: number; newStatus: string }
+      }
+    ) => {
       const { typeOfDeal, dealId, newStatus } = action.payload
       state[typeOfDeal] = state[typeOfDeal].map((deal) =>
         deal.id === dealId ? { ...deal, status: newStatus } : deal
       )
     },
-    cancelDeal: (state, action) => {
+    cancelDeal: (
+      state: State,
+      action: {
+        payload: { typeOfDeal: string; dealId: number }
+      }
+    ) => {
       const { typeOfDeal, dealId } = action.payload
       state[typeOfDeal] = state[typeOfDeal].filter((deal) => deal.id !== dealId)
     },
@@ -94,7 +112,7 @@ export const changeDealStatus =
   }
 
 export const cancelDealRequest =
-  ({ typeOfDeal, dealId }) =>
+  ({ typeOfDeal, dealId }: { typeOfDeal: string; dealId: number }) =>
   async (dispatch) => {
     try {
       await cancelDealRequestQuery(dealId, typeOfDeal)

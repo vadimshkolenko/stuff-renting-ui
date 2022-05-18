@@ -13,6 +13,8 @@ import {
 import { RootState } from '../store/configureStore'
 import ImageUploading from 'react-images-uploading'
 import { serialize } from 'object-to-formdata'
+import { NavLink } from 'react-router-dom'
+import RequestAnswerInfo from '../components/RequestAnswerInfo'
 
 const AddCreationForm: FC = () => {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -69,21 +71,20 @@ const AddCreationForm: FC = () => {
     createAddCallback(formData)
   }
 
-  // if (isSuccess) {
-  //   return (
-  //     <Grid container alignItems="center" justifyContent="center">
-  //       <Typography variant="h4" component="h1" color="primary">
-  //         Поздравляем вы зарегистрированы!
-  //       </Typography>
-  //       <Box mt={1}>
-  //         <Typography variant="body1" component="p" color="primary">
-  //           На указанную вами почту отправлено письмо. Для завершения
-  //           регистрации, пожалуйста, перейдите по ссылке из этого письма.
-  //         </Typography>
-  //       </Box>
-  //     </Grid>
-  //   )
-  // }
+  if (isSuccess) {
+    return (
+      <RequestAnswerInfo
+        content={
+          <>
+            Ваше объявление успешно создано!
+            <br />
+            Просмотреть все созданные объявления можно в разделе{' '}
+            <NavLink to={'/myAds'}>Мои объявления</NavLink>.
+          </>
+        }
+      />
+    )
+  }
 
   const onChange = (imageList) => {
     setImages(imageList)

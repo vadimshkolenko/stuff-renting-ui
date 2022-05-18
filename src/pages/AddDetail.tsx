@@ -19,6 +19,7 @@ import { requestDealQuery } from '../services'
 import StuffInfo from '../components/StuffInfo'
 import ContentWrapper from '../components/ContentWrapper'
 import ErrorText from '../components/ErrorText'
+import RequestAnswerInfo from '../components/RequestAnswerInfo'
 
 const AdDetail: FC = () => {
   const dispatch = useDispatch()
@@ -82,20 +83,15 @@ const AdDetail: FC = () => {
 
   if (bookingSuccess) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '30vh',
-        }}
-      >
-        <Typography gutterBottom variant="h6" component="p">
-          Ваш запрос на бронирование был успешно отправлен арендодателю!
-          <br /> Вы можете посмотреть свои запросы на аренду в разделе{' '}
-          <NavLink to={'/deals'}>Мои сделки</NavLink>.
-        </Typography>
-      </Box>
+      <RequestAnswerInfo
+        content={
+          <>
+            Ваш запрос на бронирование был успешно отправлен арендодателю!
+            <br /> Вы можете посмотреть свои запросы на аренду в разделе{' '}
+            <NavLink to={'/deals'}>Мои сделки</NavLink>.
+          </>
+        }
+      />
     )
   }
 
@@ -104,6 +100,7 @@ const AdDetail: FC = () => {
       <ContentWrapper
         isLoading={isLoading}
         errorMessage={errorMessage}
+        isEmpty={!Object.keys(data).length && !isLoading && !errorMessage}
         contentGeneratorCallback={() => (
           <Box sx={{ flexGrow: 1 }} mt={10}>
             <Grid container spacing={2}>
@@ -144,8 +141,7 @@ const AdDetail: FC = () => {
                       />
                     </Stack>
                   </Box>
-                  {/*TODO исправить типы данных*/}
-                  {+data.UserId !== +UserId && (
+                  {data.UserId !== UserId && (
                     <>
                       <Box mt={3}>
                         <Typography gutterBottom variant="h6" component="p">

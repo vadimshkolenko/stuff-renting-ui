@@ -6,14 +6,14 @@ import {
 import { Notification } from '../../interfaces/notifications'
 
 interface State {
-  errorMessage?: string
+  errorMessage: string | null
   isLoading: boolean
   success: boolean
   unreadCount: number
   data: Array<Notification>
 }
 
-const initialState: State = {
+const initialState = {
   errorMessage: null,
   isLoading: false,
   success: false,
@@ -25,23 +25,26 @@ const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
-    setNotificationsData: (state, action: { payload: Array<Notification> }) => {
+    setNotificationsData: (
+      state: State,
+      action: { payload: Array<Notification> }
+    ) => {
       state.data = action.payload
       state.unreadCount = 0
     },
-    setError: (state, action: { payload: string }) => {
+    setError: (state: State, action: { payload: string }) => {
       state.errorMessage = action.payload
     },
-    setLoading: (state, action: { payload: boolean }) => {
+    setLoading: (state: State, action: { payload: boolean }) => {
       state.isLoading = action.payload
     },
-    setCount: (state, action: { payload: number }) => {
+    setCount: (state: State, action: { payload: number }) => {
       state.unreadCount = action.payload
     },
-    setSuccess: (state, action: { payload: boolean }) => {
+    setSuccess: (state: State, action: { payload: boolean }) => {
       state.success = action.payload
     },
-    clearData: (state) => {
+    clearData: (state: State) => {
       state = { ...initialState, unreadCount: state.unreadCount }
       return state
     },

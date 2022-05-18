@@ -1,5 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getAddsQuery } from '../../services'
+import { Ad } from '../../interfaces/ads'
+
+interface State {
+  errorMessage: string | null
+  isLoading: boolean
+  success: boolean
+  data: Array<Ad>
+}
 
 const initialState = {
   errorMessage: null,
@@ -12,20 +20,20 @@ const addsSlice = createSlice({
   name: 'adds',
   initialState,
   reducers: {
-    setAddsData: (state, action) => {
+    setAddsData: (state: State, action: { payload: Array<Ad> }) => {
       state.data = action.payload
     },
-    setError: (state, action) => {
+    setError: (state: State, action: { payload: string }) => {
       state.errorMessage = action.payload
     },
-    setLoading: (state, action) => {
+    setLoading: (state: State, action: { payload: boolean }) => {
       state.isLoading = action.payload
     },
-    clearData: (state) => {
+    clearData: (state: State) => {
       state = initialState
       return state
     },
-    setSuccess: (state, action) => {
+    setSuccess: (state: State, action: { payload: boolean }) => {
       state.success = action.payload
     },
   },

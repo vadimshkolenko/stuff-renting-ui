@@ -1,41 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getAdQuery } from '../../services'
+import { Ad } from '../../interfaces/ads'
 
-export interface AddData {
-  description: string
-  name: string
-  price: number
-  deposit: string
-  assessedValue: string
-  Images: Array<any>
-  UserId: number
+interface State {
+  errorMessage: string | null
+  isLoading: boolean
+  data: Ad
 }
 
 const initialState = {
   errorMessage: null,
   isLoading: false,
-  data: {
-    description: '',
-    name: '',
-    price: 0,
-    deposit: '',
-    assessedValue: '',
-    Images: [],
-    UserId: null,
-  },
+  data: {},
 }
 
 const adDetailSlice = createSlice({
   name: 'adDetail',
   initialState,
   reducers: {
-    setAdData: (state, action) => {
+    setAdData: (state: State, action: { payload: Ad }) => {
       state.data = action.payload
     },
-    setError: (state, action) => {
+    setError: (state: State, action: { payload: string }) => {
       state.errorMessage = action.payload
     },
-    setLoading: (state, action) => {
+    setLoading: (state, action: { payload: boolean }) => {
       state.isLoading = action.payload
     },
     clearData: (state) => {

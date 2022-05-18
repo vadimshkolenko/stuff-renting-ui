@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 import { Box, Grid, Typography, CardMedia } from '@material-ui/core'
-import { AddData } from '../store/slices/adDetailSlice'
+import { Ad } from '../interfaces/ads'
 
-const StuffInfo: FC = ({ data }: { data: AddData }) => {
+const StuffInfo: FC = ({ data }: { data: Ad }) => {
   return (
     <Grid item xs={8}>
       <CardMedia
