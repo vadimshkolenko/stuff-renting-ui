@@ -41,7 +41,7 @@ const Deals: FC = () => {
     }
   }, [value, dispatch, getDeals])
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
   }
 
@@ -56,10 +56,10 @@ const Deals: FC = () => {
     )
   }
 
-  const cancelDealRequestCallback = ({ dealId }) => {
+  const cancelDealRequestCallback = ({ dealId, typeOfDeal }) => {
     dispatch(
       cancelDealRequest({
-        typeOfDeal: 'landlordDeals',
+        typeOfDeal,
         dealId,
       })
     )
@@ -88,6 +88,7 @@ const Deals: FC = () => {
         <TabPanel value={value} index={0}>
           {landlordDeals.map((deal) =>
             cardGenerator({
+              role: 'landlord',
               deal,
               changeDealStatusCallback,
               cancelDealRequestCallback,
@@ -97,6 +98,7 @@ const Deals: FC = () => {
         <TabPanel value={value} index={1}>
           {renterDeals.map((deal) =>
             cardGenerator({
+              role: 'renter',
               deal,
               changeDealStatusCallback,
               cancelDealRequestCallback,
@@ -113,7 +115,9 @@ function cardGenerator({
   deal,
   changeDealStatusCallback,
   cancelDealRequestCallback,
+  role,
 }) {
+  const typeOfDeal = role === 'landlord' ? 'landlordDeals' : 'renterDeals'
   return (
     <Box mt={5}>
       <Card>
@@ -129,6 +133,7 @@ function cardGenerator({
           </Typography>
           {deal.status === 'WAIT_RESPONSE' && (
             <DealActionButtons
+              role={role}
               changeDealStatusCallback={() =>
                 changeDealStatusCallback({
                   dealId: deal.id,
@@ -136,7 +141,7 @@ function cardGenerator({
                 })
               }
               cancelDealRequestCallback={() =>
-                cancelDealRequestCallback({ dealId: deal.id })
+                cancelDealRequestCallback({ dealId: deal.id, typeOfDeal })
               }
             />
           )}

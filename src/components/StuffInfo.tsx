@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Box, Grid, Typography, CardMedia } from '@material-ui/core'
 import { AddData } from '../store/slices/adDetailSlice'
 
-const StuffInfo: FC = ({ data }: AddData) => {
+const StuffInfo: FC = ({ data }: { data: AddData }) => {
   return (
     <Grid item xs={8}>
       <CardMedia

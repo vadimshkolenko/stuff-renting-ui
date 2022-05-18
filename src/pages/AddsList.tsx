@@ -11,16 +11,38 @@ import {
   CardActionArea,
 } from '@material-ui/core'
 import { RootState } from '../store/configureStore'
-import { getAdds } from '../store/slices/addsSlice'
+import { getAdds, clearData } from '../store/slices/addsSlice'
+import Loader from '../components/Loader'
+import ErrorMessage from '../components/ErrorMessage'
+import EmptyData from '../components/EmptyData'
 
 const AddsList: FC = () => {
   const dispatch = useDispatch()
 
-  const adds = useSelector((state: RootState) => state.adds.data)
+  const {
+    data: adds,
+    isLoading,
+    errorMessage,
+    success,
+  } = useSelector((state: RootState) => state.adds)
 
-  useEffect(() => {
+  useEffect((): (() => void) => {
     dispatch(getAdds())
+
+    return () => dispatch(clearData())
   }, [dispatch, getAdds])
+
+  const renderBody = () => {
+    if (isLoading) {
+      return <Loader />
+    } else if (errorMessage) {
+      return <ErrorMessage message={errorMessage} />
+    } else if (!adds.length && success) {
+      return <EmptyData />
+    } else {
+      return <>{adds.map(cardGenerator)}</>
+    }
+  }
 
   return (
     <Container component="main" maxWidth="md">
@@ -29,7 +51,7 @@ const AddsList: FC = () => {
           Объявления
         </Typography>
       </Box>
-      {adds.map(cardGenerator)}
+      {renderBody()}
     </Container>
   )
 }
@@ -54,6 +76,8 @@ function cardGenerator(add) {
               <Typography gutterBottom variant="h5" component="div">
                 {add.price} ₽
               </Typography>
+              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+              {/*@ts-ignore*/}
               <Typography variant="body2" color="text.secondary">
                 {add.description}
               </Typography>

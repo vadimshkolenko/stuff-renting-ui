@@ -22,9 +22,12 @@ const AdDetail: FC = () => {
   const dispatch = useDispatch()
   const { adId } = useParams<{ adId: string }>()
   const { UserId } = useSelector((state: RootState) => state.account)
-  const { isLoading, errorMessage, data } = useSelector(
-    (state: RootState) => state.adDetail
-  )
+  const {
+    isLoading,
+    errorMessage,
+    data,
+    success: detailLoadingSuccess,
+  } = useSelector((state: RootState) => state.adDetail)
   const dateStart = useInput(moment().format('YYYY-MM-DD'))
   const dateEnd = useInput(moment().add(1, 'days').format('YYYY-MM-DD'))
   const [bookingIsSending, setBookingSending] = useState(false)
@@ -125,48 +128,53 @@ const AdDetail: FC = () => {
                   />
                 </Stack>
               </Box>
-              <Box mt={3}>
-                <Typography gutterBottom variant="h6" component="p">
-                  Дата аренды
-                </Typography>
-                <Stack spacing={1} direction="row">
-                  <TextField
-                    id="dateStart"
-                    label="Начало аренды"
-                    type="date"
-                    value={dateStart.value}
-                    onChange={dateStart.onChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                  <TextField
-                    id="dateEnd"
-                    label="Конец аренды"
-                    type="date"
-                    value={dateEnd.value}
-                    onChange={dateEnd.onChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </Stack>
-              </Box>
-              <Box mt={2}>
-                <Typography gutterBottom variant="h6" component="p">
-                  Итого: {computedPrice}₽
-                </Typography>
-              </Box>
-              <Box mt={2}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  // disabled={isLoading}
-                  type="submit"
-                >
-                  Забронировать
-                </Button>
-              </Box>
+              {/*TODO исправить типы данных*/}
+              {+data.UserId !== +UserId && (
+                <>
+                  <Box mt={3}>
+                    <Typography gutterBottom variant="h6" component="p">
+                      Дата аренды
+                    </Typography>
+                    <Stack spacing={1} direction="row">
+                      <TextField
+                        id="dateStart"
+                        label="Начало аренды"
+                        type="date"
+                        value={dateStart.value}
+                        onChange={dateStart.onChange}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                      <TextField
+                        id="dateEnd"
+                        label="Конец аренды"
+                        type="date"
+                        value={dateEnd.value}
+                        onChange={dateEnd.onChange}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </Stack>
+                  </Box>
+                  <Box mt={2}>
+                    <Typography gutterBottom variant="h6" component="p">
+                      Итого: {computedPrice}₽
+                    </Typography>
+                  </Box>
+                  <Box mt={2}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      // disabled={isLoading}
+                      type="submit"
+                    >
+                      Забронировать
+                    </Button>
+                  </Box>
+                </>
+              )}
             </Box>
           </Grid>
         </Grid>

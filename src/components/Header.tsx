@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import {
   AppBar,
@@ -12,13 +12,16 @@ import {
   Button,
   Tooltip,
   MenuItem,
+  Badge,
 } from '@material-ui/core'
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket'
 import AddIcon from '@mui/icons-material/Add'
 import FavoriteIcon from '@mui/icons-material/Favorite'
-import { useDispatch } from 'react-redux'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../store/slices/accountSlice'
 import { useNavigate } from 'react-router-dom'
+import { getCountOfUnreadNotifications } from '../store/slices/notificationsSlice'
+import { RootState } from '../store/configureStore'
 
 const settings = [
   { name: 'Мои вещи' },
@@ -33,6 +36,13 @@ const Header: FC = () => {
     null
   )
   const navigate = useNavigate()
+
+  const { UserId } = useSelector((state: RootState) => state.account)
+  const { unreadCount } = useSelector((state: RootState) => state.notifications)
+
+  useEffect(() => {
+    dispatch(getCountOfUnreadNotifications(UserId))
+  }, [UserId, getCountOfUnreadNotifications, dispatch])
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
@@ -87,19 +97,23 @@ const Header: FC = () => {
               Создать объявление
             </Button>
             <IconButton
+              component={NavLink}
+              to="/notifications"
               size="medium"
               aria-label="show 4 new mails"
               color="inherit"
             >
-              <ShoppingBasketIcon />
+              <Badge badgeContent={unreadCount} color="secondary">
+                <NotificationsIcon />
+              </Badge>
             </IconButton>
-            <IconButton
-              size="medium"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <FavoriteIcon />
-            </IconButton>
+            {/*<IconButton*/}
+            {/*  size="medium"*/}
+            {/*  aria-label="show 4 new mails"*/}
+            {/*  color="inherit"*/}
+            {/*>*/}
+            {/*  <FavoriteIcon />*/}
+            {/*</IconButton>*/}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

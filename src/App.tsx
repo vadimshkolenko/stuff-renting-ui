@@ -15,6 +15,7 @@ import AddCreationForm from './pages/AddCreationForm'
 import AddsList from './pages/AddsList'
 import AddDetail from './pages/AddDetail'
 import Deals from './pages/Deals'
+import Notifications from './pages/Notifications'
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   if (!localStorage.getItem(token)) {
@@ -43,6 +44,14 @@ const App: FC = () => {
           element={
             <RequireAuth>
               <Deals />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <RequireAuth>
+              <Notifications />
             </RequireAuth>
           }
         />

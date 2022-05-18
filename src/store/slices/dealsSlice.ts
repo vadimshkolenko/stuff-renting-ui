@@ -100,7 +100,7 @@ export const cancelDealRequest =
   async (dispatch) => {
     setLoading(true)
     try {
-      await cancelDealRequestQuery(dealId)
+      await cancelDealRequestQuery(dealId, typeOfDeal)
       dispatch(cancelDeal({ typeOfDeal, dealId }))
     } catch (err) {
       dispatch(setError(err.error ?? 'Ошибка!'))
