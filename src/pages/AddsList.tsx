@@ -12,9 +12,7 @@ import {
 } from '@material-ui/core'
 import { RootState } from '../store/configureStore'
 import { getAdds, clearData } from '../store/slices/addsSlice'
-import Loader from '../components/Loader'
-import ErrorMessage from '../components/ErrorMessage'
-import EmptyData from '../components/EmptyData'
+import ContentWrapper from '../components/ContentWrapper'
 
 const AddsList: FC = () => {
   const dispatch = useDispatch()
@@ -32,18 +30,6 @@ const AddsList: FC = () => {
     return () => dispatch(clearData())
   }, [dispatch, getAdds])
 
-  const renderBody = () => {
-    if (isLoading) {
-      return <Loader />
-    } else if (errorMessage) {
-      return <ErrorMessage message={errorMessage} />
-    } else if (!adds.length && success) {
-      return <EmptyData />
-    } else {
-      return <>{adds.map(cardGenerator)}</>
-    }
-  }
-
   return (
     <Container component="main" maxWidth="md">
       <Box mt={3} mb={3}>
@@ -51,7 +37,12 @@ const AddsList: FC = () => {
           Объявления
         </Typography>
       </Box>
-      {renderBody()}
+      <ContentWrapper
+        isLoading={isLoading}
+        errorMessage={errorMessage}
+        isEmpty={!adds.length && success}
+        contentGeneratorCallback={() => adds.map(cardGenerator)}
+      />
     </Container>
   )
 }

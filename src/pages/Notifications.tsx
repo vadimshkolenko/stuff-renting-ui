@@ -13,6 +13,7 @@ import { getNotifications, clearData } from '../store/slices/notificationsSlice'
 import Loader from '../components/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 import EmptyData from '../components/EmptyData'
+import ContentWrapper from '../components/ContentWrapper'
 
 const Notifications: FC = () => {
   const dispatch = useDispatch()
@@ -31,17 +32,19 @@ const Notifications: FC = () => {
     return () => dispatch(clearData())
   }, [dispatch, getNotifications])
 
-  const renderBody = () => {
-    if (isLoading) {
-      return <Loader />
-    } else if (errorMessage) {
-      return <ErrorMessage message={errorMessage} />
-    } else if (!notifications.length && success) {
-      return <EmptyData />
-    } else {
-      return (
-        <>
-          {notifications.map((notification) => (
+  return (
+    <Container component="main" maxWidth="md">
+      <Box mt={3} mb={3}>
+        <Typography variant="h2" component="h1" color="primary">
+          Уведомления
+        </Typography>
+      </Box>
+      <ContentWrapper
+        isLoading={isLoading}
+        errorMessage={errorMessage}
+        isEmpty={!notifications.length && success}
+        contentGeneratorCallback={() =>
+          notifications.map((notification) => (
             <Box mt={5} key={notification.id}>
               <Card>
                 <CardContent>
@@ -58,20 +61,9 @@ const Notifications: FC = () => {
                 </CardContent>
               </Card>
             </Box>
-          ))}
-        </>
-      )
-    }
-  }
-
-  return (
-    <Container component="main" maxWidth="md">
-      <Box mt={3} mb={3}>
-        <Typography variant="h2" component="h1" color="primary">
-          Уведомления
-        </Typography>
-      </Box>
-      {renderBody()}
+          ))
+        }
+      />
     </Container>
   )
 }

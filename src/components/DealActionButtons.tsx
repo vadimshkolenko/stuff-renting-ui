@@ -10,7 +10,7 @@ const DealActionButtons = ({
   if (role === 'landlord') {
     return (
       <Box mt={3}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="textSecondary">
           Запрос на аренду ожидает вашего действия:
         </Typography>
         <Box mt={2}>
@@ -36,7 +36,7 @@ const DealActionButtons = ({
   } else {
     return (
       <Box mt={3}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="textSecondary">
           Вы можете отменить запрос на аренду:
         </Typography>
         <Box mt={2}>
