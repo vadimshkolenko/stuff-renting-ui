@@ -61,10 +61,11 @@ const dealsSlice = createSlice({
     cancelDeal: (
       state: State,
       action: {
-        payload: { typeOfDeal: string; dealId: number }
+        payload: { role: 'landlord' | 'renter'; dealId: number }
       }
     ) => {
-      const { typeOfDeal, dealId } = action.payload
+      const { role, dealId } = action.payload
+      const typeOfDeal = `${role}Deals`
       state[typeOfDeal] = state[typeOfDeal].filter((deal) => deal.id !== dealId)
     },
   },
@@ -112,11 +113,11 @@ export const changeDealStatus =
   }
 
 export const cancelDealRequest =
-  ({ typeOfDeal, dealId }: { typeOfDeal: string; dealId: number }) =>
+  ({ role, dealId }: { role: 'landlord' | 'renter'; dealId: number }) =>
   async (dispatch) => {
     try {
-      await cancelDealRequestQuery(dealId, typeOfDeal)
-      dispatch(cancelDeal({ typeOfDeal, dealId }))
+      await cancelDealRequestQuery(dealId, role)
+      dispatch(cancelDeal({ dealId, role }))
     } catch (err) {
     } finally {
     }

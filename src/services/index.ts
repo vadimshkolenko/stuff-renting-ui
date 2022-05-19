@@ -23,8 +23,8 @@ export const getDealsQuery = (role, id) => api.get(`/getDeals/${role}/${id}`)
 export const changeDealStatusQuery = (approveData) =>
   api.patch('/changeDealStatus', approveData)
 
-export const cancelDealRequestQuery = (id, typeOfDeal) =>
-  api.delete(`/cancelDealRequest/${id}/${typeOfDeal}`)
+export const cancelDealRequestQuery = (id, role) =>
+  api.delete(`/cancelDealRequest/${id}/${role}`)
 
 export const getNotificationsQuery = (userId) =>
   api.get(`/notifications/${userId}`)

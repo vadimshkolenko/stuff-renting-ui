@@ -50,6 +50,7 @@ const Deals: FC = () => {
     setValue(newValue)
   }
 
+  // get new status, role
   const changeDealStatusCallback = ({ dealId, landlordId }) => {
     dispatch(
       changeDealStatus({
@@ -61,10 +62,16 @@ const Deals: FC = () => {
     )
   }
 
-  const cancelDealRequestCallback = ({ dealId, typeOfDeal }) => {
+  const cancelDealRequestCallback = ({
+    dealId,
+    role,
+  }: {
+    dealId: number
+    role: 'landlord' | 'renter'
+  }) => {
     dispatch(
       cancelDealRequest({
-        typeOfDeal,
+        role,
         dealId,
       })
     )
@@ -150,20 +157,18 @@ function cardGenerator({
           <Typography gutterBottom variant="h5" component="div">
             Статус: {statusConverter(deal.status)}
           </Typography>
-          {deal.status === 'WAIT_RESPONSE' && (
-            <DealActionButtons
-              role={role}
-              changeDealStatusCallback={() =>
-                changeDealStatusCallback({
-                  dealId: deal.id,
-                  landlordId: deal.landlordId,
-                })
-              }
-              cancelDealRequestCallback={() =>
-                cancelDealRequestCallback({ dealId: deal.id, typeOfDeal })
-              }
-            />
-          )}
+          <DealActionButtons
+            role={role}
+            changeDealStatusCallback={() =>
+              changeDealStatusCallback({
+                dealId: deal.id,
+                landlordId: deal.landlordId,
+              })
+            }
+            cancelDealRequestCallback={() =>
+              cancelDealRequestCallback({ dealId: deal.id, role })
+            }
+          />
         </CardContent>
       </Card>
     </Box>
