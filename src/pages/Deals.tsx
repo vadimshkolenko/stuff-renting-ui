@@ -20,6 +20,8 @@ import { renter, landlord } from '../static'
 import DealActionButtons from '../components/DealActionButtons'
 import { statusConverter } from '../utils/helpers'
 import ContentWrapper from '../components/ContentWrapper'
+import { dealStatus } from '../static'
+import { Deal, Role } from '../interfaces/deals'
 
 const Deals: FC = () => {
   const dispatch = useDispatch()
@@ -50,14 +52,28 @@ const Deals: FC = () => {
     setValue(newValue)
   }
 
-  // get new status, role
-  const changeDealStatusCallback = ({ dealId, landlordId }) => {
+  const changeDealStatusCallback = (deal: Deal, role: Role) => {
+    let newStatus = ''
+    const currentStatus = deal.status
+    switch (currentStatus) {
+      case dealStatus.WAIT_RESPONSE:
+        newStatus = dealStatus.WAIT_PAYMENT
+        break
+      // after payment change to  WAIT_RECEIVING
+      case dealStatus.WAIT_RECEIVING:
+        newStatus = dealStatus.ACTIVE
+        break
+      case dealStatus.ACTIVE:
+        newStatus = dealStatus.COMPLETED
+        break
+    }
+
     dispatch(
       changeDealStatus({
-        typeOfDeal: 'landlordDeals',
-        dealId,
-        landlordId,
-        newStatus: 'ACTIVE',
+        role,
+        dealId: deal.id,
+        landlordId: deal.landlordId,
+        newStatus,
       })
     )
   }
@@ -67,7 +83,7 @@ const Deals: FC = () => {
     role,
   }: {
     dealId: number
-    role: 'landlord' | 'renter'
+    role: Role
   }) => {
     dispatch(
       cancelDealRequest({
@@ -143,7 +159,6 @@ function cardGenerator({
   cancelDealRequestCallback,
   role,
 }) {
-  const typeOfDeal = role === 'landlord' ? 'landlordDeals' : 'renterDeals'
   return (
     <Box mt={5}>
       <Card>
@@ -159,11 +174,9 @@ function cardGenerator({
           </Typography>
           <DealActionButtons
             role={role}
+            status={deal.status}
             changeDealStatusCallback={() =>
-              changeDealStatusCallback({
-                dealId: deal.id,
-                landlordId: deal.landlordId,
-              })
+              changeDealStatusCallback(deal, role)
             }
             cancelDealRequestCallback={() =>
               cancelDealRequestCallback({ dealId: deal.id, role })

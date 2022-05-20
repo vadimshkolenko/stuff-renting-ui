@@ -5,6 +5,7 @@ import {
   cancelDealRequestQuery,
 } from '../../services'
 import { renter } from '../../static'
+import { Deal, Role } from '../../interfaces/deals'
 
 interface State {
   dealsErrorMessage: string | null
@@ -21,8 +22,6 @@ const initialState = {
   renterDeals: [],
   landlordDeals: [],
 }
-
-type Deal = 'renterDeals' | 'landlordDeals'
 
 const dealsSlice = createSlice({
   name: 'deals',
@@ -50,10 +49,15 @@ const dealsSlice = createSlice({
     changeStatus: (
       state: State,
       action: {
-        payload: { typeOfDeal: string; dealId: number; newStatus: string }
+        payload: {
+          role: Role
+          dealId: number
+          newStatus: string
+        }
       }
     ) => {
-      const { typeOfDeal, dealId, newStatus } = action.payload
+      const { role, dealId, newStatus } = action.payload
+      const typeOfDeal = `${role}Deals`
       state[typeOfDeal] = state[typeOfDeal].map((deal) =>
         deal.id === dealId ? { ...deal, status: newStatus } : deal
       )
@@ -61,7 +65,7 @@ const dealsSlice = createSlice({
     cancelDeal: (
       state: State,
       action: {
-        payload: { role: 'landlord' | 'renter'; dealId: number }
+        payload: { role: Role; dealId: number }
       }
     ) => {
       const { role, dealId } = action.payload
@@ -71,7 +75,7 @@ const dealsSlice = createSlice({
   },
 })
 
-export const getDeals = (role: string) => async (dispatch, getState) => {
+export const getDeals = (role: Role) => async (dispatch, getState) => {
   const userId = getState().account.UserId
   dispatch(setDealsLoading(true))
   try {
@@ -91,14 +95,14 @@ export const getDeals = (role: string) => async (dispatch, getState) => {
 }
 
 interface ChangeStatusData {
-  typeOfDeal: Deal
+  role: Role
   dealId: number
   landlordId: number
   newStatus: string
 }
 
 export const changeDealStatus =
-  ({ typeOfDeal, dealId, landlordId, newStatus }: ChangeStatusData) =>
+  ({ role, dealId, landlordId, newStatus }: ChangeStatusData) =>
   async (dispatch) => {
     try {
       await changeDealStatusQuery({
@@ -106,14 +110,14 @@ export const changeDealStatus =
         landlordId,
         newStatus,
       })
-      dispatch(changeStatus({ typeOfDeal, dealId, newStatus }))
+      dispatch(changeStatus({ role, dealId, newStatus }))
     } catch (err) {
     } finally {
     }
   }
 
 export const cancelDealRequest =
-  ({ role, dealId }: { role: 'landlord' | 'renter'; dealId: number }) =>
+  ({ role, dealId }: { role: Role; dealId: number }) =>
   async (dispatch) => {
     try {
       await cancelDealRequestQuery(dealId, role)

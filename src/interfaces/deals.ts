@@ -11,3 +11,5 @@ export interface Deal {
   status: string
   updatedAt: string
 }
+
+export type Role = 'landlord' | 'renter'

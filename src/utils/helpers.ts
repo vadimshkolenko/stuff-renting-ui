@@ -1,10 +1,16 @@
+import { dealStatus } from '../static'
+
 export const statusConverter = (status: string) => {
   switch (status) {
-    case 'WAIT_RESPONSE':
+    case dealStatus.WAIT_RESPONSE:
       return 'Ожидает подтверждения'
-    case 'ACTIVE':
+    case dealStatus.WAIT_PAYMENT:
+      return 'Ожидает оплаты'
+    case dealStatus.WAIT_RECEIVING:
+      return 'Ожидает подтверждения получение'
+    case dealStatus.ACTIVE:
       return 'Активная'
-    case 'COMPLETED':
+    case dealStatus.COMPLETED:
       return 'Завершенная'
     default:
       return ''
