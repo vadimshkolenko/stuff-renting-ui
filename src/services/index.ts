@@ -31,3 +31,9 @@ export const getNotificationsQuery = (userId) =>
 
 export const getCountOfUnreadNotificationsQuery = (userId) =>
   api.get(`/countOfUnreadNotifications/${userId}`)
+
+export const createBillQuery = (paymentData) =>
+  api.post('/createBill', paymentData)
+
+export const getPaymentLink = (dealId, amount) =>
+  api.get(`/getPaymentLink/${dealId}/${amount}`)

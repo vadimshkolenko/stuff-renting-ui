@@ -41,6 +41,7 @@ const DealActionButtons = ({
   cancelDealRequestCallback,
   role,
   status,
+  generatePaymentLink,
 }) => {
   const landLordActions = {
     [dealStatus.WAIT_RESPONSE]: {
@@ -101,7 +102,7 @@ const DealActionButtons = ({
           name: 'Оплатить',
           variant: 'contained',
           color: 'primary',
-          onClick: () => console.log('NAV'),
+          onClick: generatePaymentLink,
         },
       ],
     },

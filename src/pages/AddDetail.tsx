@@ -42,7 +42,7 @@ const AdDetail: FC = () => {
     )
     //иначе ошибку о некорректных датах
     if (daysDifference > 0) {
-      setComputedPrice(daysDifference * data.price)
+      setComputedPrice(daysDifference * data.price + data.deposit ?? 0)
     }
   }, [dateStart, dateEnd])
 
@@ -141,7 +141,8 @@ const AdDetail: FC = () => {
                       />
                     </Stack>
                   </Box>
-                  {data.UserId !== UserId && (
+                  {/*TODO FIX TYPES*/}
+                  {+data.UserId !== +UserId && (
                     <>
                       <Box mt={3}>
                         <Typography gutterBottom variant="h6" component="p">

@@ -22,6 +22,7 @@ import { statusConverter } from '../utils/helpers'
 import ContentWrapper from '../components/ContentWrapper'
 import { dealStatus } from '../static'
 import { Deal, Role } from '../interfaces/deals'
+import { getPaymentLink } from '../services'
 
 const Deals: FC = () => {
   const dispatch = useDispatch()
@@ -76,6 +77,12 @@ const Deals: FC = () => {
         newStatus,
       })
     )
+  }
+
+  const generatePaymentLink = async (dealId, amount) => {
+    const response = await getPaymentLink(dealId, amount)
+    const { link } = response.data
+    window.open(link, '_self')
   }
 
   const cancelDealRequestCallback = ({
@@ -142,6 +149,7 @@ const Deals: FC = () => {
                   deal,
                   changeDealStatusCallback,
                   cancelDealRequestCallback,
+                  generatePaymentLink,
                 })
               )
             }
@@ -152,13 +160,24 @@ const Deals: FC = () => {
   )
 }
 
+interface CardGenerator {
+  deal: Deal
+  changeDealStatusCallback: (deal: Deal, role: string) => void
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  cancelDealRequestCallback: ({ dealId: string, role: string }) => void
+  generatePaymentLink?: (string, number) => void
+  role: string
+}
+
 // TODO добавить даты аренды
 function cardGenerator({
   deal,
   changeDealStatusCallback,
   cancelDealRequestCallback,
+  generatePaymentLink,
   role,
-}) {
+}: CardGenerator) {
   return (
     <Box mt={5}>
       <Card>
@@ -180,6 +199,9 @@ function cardGenerator({
             }
             cancelDealRequestCallback={() =>
               cancelDealRequestCallback({ dealId: deal.id, role })
+            }
+            generatePaymentLink={() =>
+              generatePaymentLink?.(deal.id, deal.price)
             }
           />
         </CardContent>
