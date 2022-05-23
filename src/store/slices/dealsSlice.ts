@@ -97,17 +97,15 @@ export const getDeals = (role: Role) => async (dispatch, getState) => {
 interface ChangeStatusData {
   role: Role
   dealId: number
-  landlordId: number
   newStatus: string
 }
 
 export const changeDealStatus =
-  ({ role, dealId, landlordId, newStatus }: ChangeStatusData) =>
+  ({ role, dealId, newStatus }: ChangeStatusData) =>
   async (dispatch) => {
     try {
       await changeDealStatusQuery({
         dealId,
-        landlordId,
         newStatus,
       })
       dispatch(changeStatus({ role, dealId, newStatus }))

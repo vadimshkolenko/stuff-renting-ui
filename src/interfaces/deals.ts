@@ -7,6 +7,7 @@ export interface Deal {
   landlordId: number
   name: string
   price: number
+  deposit: number
   renterId: number
   status: string
   updatedAt: string

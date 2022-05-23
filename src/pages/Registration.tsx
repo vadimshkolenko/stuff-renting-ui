@@ -23,6 +23,7 @@ const Registration: FC = () => {
   const username = useInput('')
   const email = useInput('')
   const password = useInput('')
+  const phone = useInput('')
 
   if (token) {
     return <Navigate to={'/'} />
@@ -50,6 +51,7 @@ const Registration: FC = () => {
       username: username.value,
       email: email.value,
       password: password.value,
+      phone: phone.value,
     })
   }
 
@@ -99,6 +101,20 @@ const Registration: FC = () => {
           id="email"
           value={email.value}
           onChange={email.onChange}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Phone"
+          name="phone"
+          autoComplete="phone"
+          autoFocus
+          type="tel"
+          id="phone"
+          value={phone.value}
+          onChange={phone.onChange}
         />
         <TextField
           variant="outlined"

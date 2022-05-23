@@ -73,7 +73,6 @@ const Deals: FC = () => {
       changeDealStatus({
         role,
         dealId: deal.id,
-        landlordId: deal.landlordId,
         newStatus,
       })
     )
@@ -186,7 +185,7 @@ function cardGenerator({
             Название: {deal.name}
           </Typography>
           <Typography gutterBottom variant="h5" component="div">
-            Цена: {deal.price}₽
+            Цена с депозитом: {Number(deal.price) + Number(deal.deposit)}₽
           </Typography>
           <Typography gutterBottom variant="h5" component="div">
             Статус: {statusConverter(deal.status)}
@@ -201,7 +200,7 @@ function cardGenerator({
               cancelDealRequestCallback({ dealId: deal.id, role })
             }
             generatePaymentLink={() =>
-              generatePaymentLink?.(deal.id, deal.price)
+              generatePaymentLink?.(deal.id, deal.price + deal.deposit)
             }
           />
         </CardContent>

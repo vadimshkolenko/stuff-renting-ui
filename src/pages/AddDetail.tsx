@@ -42,7 +42,7 @@ const AdDetail: FC = () => {
     )
     //иначе ошибку о некорректных датах
     if (daysDifference > 0) {
-      setComputedPrice(daysDifference * data.price + data.deposit ?? 0)
+      setComputedPrice(daysDifference * data.price)
     }
   }, [dateStart, dateEnd])
 
@@ -76,6 +76,7 @@ const AdDetail: FC = () => {
       AddId: adId,
       renterId: UserId,
       price: computedPrice,
+      deposit: data.deposit,
       landlordId: data.UserId,
       name: data.name,
     })
