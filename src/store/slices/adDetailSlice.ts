@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAdQuery } from '../../services'
+import { getAdQuery, checkIsFavoriteQuery } from '../../services'
 import { Ad } from '../../interfaces/ads'
+import { UserId, UserId as currentUserId } from '../../static'
 
 interface State {
   errorMessage: string | null
@@ -27,6 +28,9 @@ const adDetailSlice = createSlice({
     setLoading: (state, action: { payload: boolean }) => {
       state.isLoading = action.payload
     },
+    switchFavorite: (state) => {
+      state.data.isFavorite = !state.data.isFavorite
+    },
     clearData: (state) => {
       state = initialState
       return state
@@ -38,8 +42,13 @@ export const getAd = (id) => async (dispatch) => {
   dispatch(setLoading(true))
   try {
     const response = await getAdQuery(id)
-    const { data } = response.data
-    dispatch(setAdData(data))
+    const { data: adData } = response.data
+    const isFavoriteResponse = await checkIsFavoriteQuery(
+      localStorage.getItem(currentUserId),
+      id
+    )
+    const { data: isFavoriteData } = isFavoriteResponse
+    dispatch(setAdData({ ...adData, isFavorite: isFavoriteData.isFavorite }))
   } catch (err) {
     dispatch(setError(err.error ?? 'Ошибка!'))
   } finally {
@@ -47,7 +56,7 @@ export const getAd = (id) => async (dispatch) => {
   }
 }
 
-export const { setAdData, setError, setLoading, clearData } =
+export const { setAdData, setError, setLoading, clearData, switchFavorite } =
   adDetailSlice.actions
 
 export default adDetailSlice.reducer

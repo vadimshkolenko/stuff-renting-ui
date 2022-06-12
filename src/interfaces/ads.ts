@@ -24,4 +24,5 @@ export interface Ad {
   name: string
   price: number
   updatedAt: string
+  isFavorite: boolean
 }

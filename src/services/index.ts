@@ -41,3 +41,12 @@ export const createBillQuery = (paymentData) =>
 
 export const getPaymentLink = (dealId, amount) =>
   api.get(`/getPaymentLink/${dealId}/${amount}`)
+
+export const addToFavoriteQuery = (data) => api.put('/addToFavorite', data)
+export const deleteFromFavoriteQuery = (data) =>
+  api.put('/deleteFromFavorite', data)
+
+export const getFavoriteQuery = (userId) => api.get(`/getFavorite/${userId}`)
+
+export const checkIsFavoriteQuery = (userId, adId) =>
+  api.get(`/checkIsFavorite/${userId}/${adId}`)

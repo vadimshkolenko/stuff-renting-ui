@@ -112,13 +112,15 @@ const Header: FC = () => {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            {/*<IconButton*/}
-            {/*  size="medium"*/}
-            {/*  aria-label="show 4 new mails"*/}
-            {/*  color="inherit"*/}
-            {/*>*/}
-            {/*  <FavoriteIcon />*/}
-            {/*</IconButton>*/}
+            <IconButton
+              size="medium"
+              aria-label="show 4 new mails"
+              color="inherit"
+              component={NavLink}
+              to="/favorite"
+            >
+              <FavoriteIcon />
+            </IconButton>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

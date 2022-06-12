@@ -9,17 +9,24 @@ import {
   TextField,
   Typography,
   Chip,
+  IconButton,
 } from '@material-ui/core'
 import Stack from '@mui/material/Stack'
 import { RootState } from '../store/configureStore'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import { getAd, clearData } from '../store/slices/adDetailSlice'
+import { getAd, clearData, switchFavorite } from '../store/slices/adDetailSlice'
 import moment from 'moment'
-import { requestDealQuery } from '../services'
+import {
+  requestDealQuery,
+  addToFavoriteQuery,
+  deleteFromFavoriteQuery,
+} from '../services'
 import StuffInfo from '../components/StuffInfo'
 import ContentWrapper from '../components/ContentWrapper'
 import ErrorText from '../components/ErrorText'
 import RequestAnswerInfo from '../components/RequestAnswerInfo'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const AdDetail: FC = () => {
   const dispatch = useDispatch()
@@ -86,6 +93,18 @@ const AdDetail: FC = () => {
     })
   }
 
+  const switchFavoriteCallback = async () => {
+    try {
+      await (data.isFavorite ? deleteFromFavoriteQuery : addToFavoriteQuery)({
+        adId,
+        UserId,
+      })
+      dispatch(switchFavorite())
+    } catch (e) {
+      console.log('ERROR', e)
+    }
+  }
+
   if (bookingSuccess) {
     return (
       <RequestAnswerInfo
@@ -121,17 +140,40 @@ const AdDetail: FC = () => {
                     borderRadius: 8,
                   }}
                 >
-                  <Typography gutterBottom variant="h5" component="h1">
-                    {data.name}
-                  </Typography>
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="p"
-                    style={{ fontWeight: 600 }}
+                  <Box
+                    sx={{
+                      display: { xs: 'none', md: 'flex' },
+                      justifyContent: 'space-between',
+                    }}
                   >
-                    {data.price}₽/сутки
-                  </Typography>
+                    <Box>
+                      <Typography gutterBottom variant="h5" component="h1">
+                        {data.name}
+                      </Typography>
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="p"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {data.price}₽/сутки
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <IconButton
+                        onClick={switchFavoriteCallback}
+                        size="medium"
+                        aria-label="show 4 new mails"
+                        color="inherit"
+                      >
+                        {data.isFavorite ? (
+                          <FavoriteIcon />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+                    </Box>
+                  </Box>
                   <Box mt={2}>
                     <Stack direction="row" spacing={1}>
                       <Chip

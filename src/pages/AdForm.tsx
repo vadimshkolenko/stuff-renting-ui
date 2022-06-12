@@ -90,6 +90,7 @@ const AdForm: FC = () => {
     createAddCallback(formData)
   }
 
+  // TODO add text for update
   if (isSuccess) {
     return (
       <RequestAnswerInfo
