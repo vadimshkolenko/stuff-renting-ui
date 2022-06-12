@@ -57,106 +57,110 @@ const Registration: FC = () => {
 
   if (isSuccess) {
     return (
-      <Grid container alignItems="center" justifyContent="center">
-        <Typography variant="h4" component="h1" color="primary">
-          Поздравляем вы зарегистрированы!
-        </Typography>
-        <Box mt={1}>
-          <Typography variant="body1" component="p" color="primary">
-            На указанную вами почту отправлено письмо. Для завершения
-            регистрации, пожалуйста, перейдите по ссылке из этого письма.
+      <Box mt={5}>
+        <Grid container alignItems="center" justifyContent="center">
+          <Typography variant="h4" component="h1" color="primary">
+            Поздравляем вы зарегистрированы!
           </Typography>
-        </Box>
-      </Grid>
+          <Box mt={1}>
+            <Typography variant="body1" component="p" color="primary">
+              На указанную вами почту отправлено письмо. Для завершения
+              регистрации, пожалуйста, перейдите по ссылке из этого письма.
+            </Typography>
+          </Box>
+        </Grid>
+      </Box>
     )
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <form onSubmit={handleSubmit}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          label="Username"
-          name="username"
-          autoComplete="username"
-          autoFocus
-          type="text"
-          id="username"
-          value={username.value}
-          onChange={username.onChange}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          label="Email"
-          name="email"
-          autoComplete="email"
-          autoFocus
-          type="email"
-          id="email"
-          value={email.value}
-          onChange={email.onChange}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          label="Phone"
-          name="phone"
-          autoComplete="phone"
-          autoFocus
-          type="tel"
-          id="phone"
-          value={phone.value}
-          onChange={phone.onChange}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          label="Password"
-          name="password"
-          autoComplete="password"
-          autoFocus
-          type="password"
-          id="password"
-          value={password.value}
-          onChange={password.onChange}
-        />
-        {errorMessage && (
+    <Box mt={5}>
+      <Container component="main" maxWidth="xs">
+        <form onSubmit={handleSubmit}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            type="text"
+            id="username"
+            value={username.value}
+            onChange={username.onChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            type="email"
+            id="email"
+            value={email.value}
+            onChange={email.onChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Phone"
+            name="phone"
+            autoComplete="phone"
+            autoFocus
+            type="tel"
+            id="phone"
+            value={phone.value}
+            onChange={phone.onChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Password"
+            name="password"
+            autoComplete="password"
+            autoFocus
+            type="password"
+            id="password"
+            value={password.value}
+            onChange={password.onChange}
+          />
+          {errorMessage && (
+            <Grid container alignItems="center" justifyContent="center">
+              <Typography variant="body1" component="p" color="error">
+                {errorMessage}
+              </Typography>
+            </Grid>
+          )}
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={isLoading}
+            type="submit"
+          >
+            Зарегистрироваться
+          </Button>
+        </form>
+        <Box mt={1}>
           <Grid container alignItems="center" justifyContent="center">
-            <Typography variant="body1" component="p" color="error">
-              {errorMessage}
-            </Typography>
+            <NavLink to={'/login'}>
+              <Typography variant="caption" component="p" color="primary">
+                Уже есть аккаунт? Войди!
+              </Typography>
+            </NavLink>
           </Grid>
-        )}
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={isLoading}
-          type="submit"
-        >
-          Зарегистрироваться
-        </Button>
-      </form>
-      <Box mt={1}>
-        <Grid container alignItems="center" justifyContent="center">
-          <NavLink to={'/login'}>
-            <Typography variant="caption" component="p" color="primary">
-              Уже есть аккаунт? Войди!
-            </Typography>
-          </NavLink>
-        </Grid>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </Box>
   )
 }
 

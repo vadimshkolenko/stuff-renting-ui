@@ -12,7 +12,11 @@ export const logoutQuery = (token) => api.post('/logout', token)
 
 export const createAddQuery = (addData) => api.post('/createAdd', addData)
 
+export const updateAddQuery = (addData) => api.patch('/updateAd', addData)
+
 export const getAddsQuery = () => api.get('/getAdds')
+
+export const getUserAdsQuery = (id) => api.get(`/getUserAds/${id}`)
 
 export const getAdQuery = (id) => api.get(`/getAdDetail/${id}`)
 

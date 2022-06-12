@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, useRef } from 'react'
 import useInput from '../hooks/useInput'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core'
 import Stack from '@mui/material/Stack'
 import { RootState } from '../store/configureStore'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { getAd, clearData } from '../store/slices/adDetailSlice'
 import moment from 'moment'
 import { requestDealQuery } from '../services'
@@ -23,6 +23,7 @@ import RequestAnswerInfo from '../components/RequestAnswerInfo'
 
 const AdDetail: FC = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { adId } = useParams<{ adId: string }>()
   const { UserId } = useSelector((state: RootState) => state.account)
   const { isLoading, errorMessage, data } = useSelector(
@@ -34,6 +35,7 @@ const AdDetail: FC = () => {
   const [bookingError, setBookingError] = useState(false)
   const [bookingSuccess, setBookingSuccess] = useState(false)
   const [computedPrice, setComputedPrice] = useState(0)
+  const isNavigatedToEdit = useRef(false)
 
   useEffect(() => {
     const daysDifference = moment(dateEnd.value).diff(
@@ -49,7 +51,9 @@ const AdDetail: FC = () => {
   useEffect((): (() => void) => {
     dispatch(getAd(adId))
 
-    return () => dispatch(clearData())
+    return () => {
+      !isNavigatedToEdit.current && dispatch(clearData())
+    }
   }, [adId, getAd])
 
   const createDealCallback = async (data) => {
@@ -193,6 +197,20 @@ const AdDetail: FC = () => {
                         )}
                       </Box>
                     </>
+                  )}
+                  {+data.UserId === +UserId && (
+                    <Box mt={2}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          isNavigatedToEdit.current = true
+                          navigate(`/editAd/${adId}`)
+                        }}
+                      >
+                        Редактировать
+                      </Button>
+                    </Box>
                   )}
                 </Box>
               </Grid>

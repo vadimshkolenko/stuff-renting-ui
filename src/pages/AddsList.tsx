@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import {
   Box,
   Container,
@@ -11,10 +11,11 @@ import {
   CardActionArea,
 } from '@material-ui/core'
 import { RootState } from '../store/configureStore'
-import { getAdds, clearData } from '../store/slices/addsSlice'
+import { getAdds, getUserAds, clearData } from '../store/slices/addsSlice'
 import ContentWrapper from '../components/ContentWrapper'
 
 const AddsList: FC = () => {
+  const { userId } = useParams<{ userId: string }>()
   const dispatch = useDispatch()
 
   const {
@@ -25,16 +26,20 @@ const AddsList: FC = () => {
   } = useSelector((state: RootState) => state.adds)
 
   useEffect((): (() => void) => {
-    dispatch(getAdds())
+    if (userId) {
+      dispatch(getUserAds(userId))
+    } else {
+      dispatch(getAdds())
+    }
 
     return () => dispatch(clearData())
-  }, [dispatch, getAdds])
+  }, [dispatch, getAdds, getUserAds, clearData, userId])
 
   return (
     <Container component="main" maxWidth="md">
       <Box mt={3} mb={3}>
         <Typography variant="h2" component="h1" color="primary">
-          Объявления
+          {userId ? 'Мои объявления' : 'Объявления'}
         </Typography>
       </Box>
       <ContentWrapper
@@ -56,9 +61,9 @@ function cardGenerator(add) {
           <CardActionArea>
             <CardMedia
               component="img"
-              height="140"
+              height="270"
               image={`http://localhost:8080/${mainImage.filename}`}
-              alt="green iguana"
+              alt={add.name}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">

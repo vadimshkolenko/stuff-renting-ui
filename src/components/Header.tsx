@@ -22,11 +22,16 @@ import { logout } from '../store/slices/accountSlice'
 import { useNavigate } from 'react-router-dom'
 import { getCountOfUnreadNotifications } from '../store/slices/notificationsSlice'
 import { RootState } from '../store/configureStore'
+import { UserId as id } from '../static'
 
 const settings = [
-  { name: 'Мои вещи' },
+  {
+    name: 'Мои объявления',
+    action: 'redirect',
+    page: `ads/${localStorage.getItem(id)}`,
+  },
   { name: 'Мои сделки', action: 'redirect', page: 'deals' },
-  { name: 'Настройки' },
+  // { name: 'Настройки' },
   { name: 'Выход', action: 'logout' },
 ]
 

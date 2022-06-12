@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { FC, useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import useInput from '../hooks/useInput'
-import { createAddQuery } from '../services'
+import { createAddQuery, updateAddQuery } from '../services'
 import {
   Box,
   Button,
@@ -13,29 +13,42 @@ import {
 import { RootState } from '../store/configureStore'
 import ImageUploading from 'react-images-uploading'
 import { serialize } from 'object-to-formdata'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams, useLocation } from 'react-router-dom'
 import RequestAnswerInfo from '../components/RequestAnswerInfo'
+import { clearData } from '../store/slices/adDetailSlice'
 
-const AddCreationForm: FC = () => {
+const AdForm: FC = () => {
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const { adId } = useParams<{ adId: string }>()
+  const isEditMode = Boolean(adId)
+  const { data: adData } = useSelector((state: RootState) => state.adDetail)
   const [errorMessage, setErrorMessage] = useState(null)
   const [isLoading, setLoading] = useState(false)
   const [isSuccess, setSuccess] = useState(false)
 
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState(adData.Images ?? [])
   const maxNumber = 69
 
-  const name = useInput('')
-  const price = useInput('')
-  const deposit = useInput('')
-  const description = useInput('')
-  const assessedValue = useInput('')
+  const name = useInput(adData.name ?? '')
+  const price = useInput(adData.price ?? '')
+  const deposit = useInput(adData.deposit ?? '')
+  const description = useInput(adData.description ?? '')
+  const assessedValue = useInput(adData.assessedValue ?? '')
 
   const UserId = useSelector((state: RootState) => state.account.UserId)
+
+  // TODO disable reload if edit mode
+  // TODO reload if we leave page
+  // TODO don't clear data if we change from edit to create mode
+  useEffect((): (() => void) => {
+    return () => dispatch(clearData())
+  }, [clearData, dispatch, location])
 
   const createAddCallback = async (data) => {
     setLoading(true)
     try {
-      await createAddQuery(data)
+      await (isEditMode ? updateAddQuery : createAddQuery)(data)
       setSuccess(true)
     } catch (err) {
       const error =
@@ -48,13 +61,11 @@ const AddCreationForm: FC = () => {
     }
   }
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-
+  const generateFormData = () => {
     const options = {
       noFilesWithArrayNotation: true,
     }
-    const formData = serialize(
+    return serialize(
       {
         name: name.value,
         price: price.value,
@@ -62,9 +73,17 @@ const AddCreationForm: FC = () => {
         assessedValue: assessedValue.value,
         description: description.value,
         UserId,
+        adId,
       },
       options
     )
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    const formData = generateFormData()
+    console.log('images', images)
     for (const image of images) {
       formData.append('images', image.file)
     }
@@ -94,7 +113,7 @@ const AddCreationForm: FC = () => {
     <Container component="main" maxWidth="md">
       <Box mt={3} mb={3}>
         <Typography variant="h2" component="h1" color="primary">
-          Создать объявление
+          {isEditMode ? 'Редактирование объявления' : 'Создать объявление'}
         </Typography>
       </Box>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -195,6 +214,7 @@ const AddCreationForm: FC = () => {
               >
                 Нажмите или перетащите изображение сюда
               </Button>
+              {/*TODO change for editing*/}
               {imageList.map((image, index) => (
                 <div key={index} className="image-item">
                   <img src={image['data_url']} alt="" width="100" />
@@ -220,7 +240,7 @@ const AddCreationForm: FC = () => {
             disabled={isLoading}
             type="submit"
           >
-            Опубликовать
+            {isEditMode ? 'Обновить' : 'Опубликовать'}
           </Button>
         </Box>
       </form>
@@ -228,4 +248,4 @@ const AddCreationForm: FC = () => {
   )
 }
 
-export default AddCreationForm
+export default AdForm

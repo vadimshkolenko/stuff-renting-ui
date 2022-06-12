@@ -11,7 +11,7 @@ import Header from './components/Header'
 import Registration from './pages/Registration'
 import Confirmation from './pages/Confirmation'
 import Login from './pages/Login'
-import AddCreationForm from './pages/AddCreationForm'
+import AdForm from './pages/AdForm'
 import AddsList from './pages/AddsList'
 import AddDetail from './pages/AddDetail'
 import Deals from './pages/Deals'
@@ -32,11 +32,20 @@ const App: FC = () => {
       <Header />
       <Routes>
         <Route path="/" element={<AddsList />} />
+        <Route path="/ads/:userId" element={<AddsList />} />
         <Route
           path="/create-ad"
           element={
             <RequireAuth>
-              <AddCreationForm />
+              <AdForm />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/editAd/:adId"
+          element={
+            <RequireAuth>
+              <AdForm />
             </RequireAuth>
           }
         />

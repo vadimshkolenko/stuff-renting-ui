@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAddsQuery } from '../../services'
+import { getAddsQuery, getUserAdsQuery } from '../../services'
 import { Ad } from '../../interfaces/ads'
 
 interface State {
@@ -43,6 +43,20 @@ export const getAdds = () => async (dispatch) => {
   dispatch(setLoading(true))
   try {
     const response = await getAddsQuery()
+    const { data } = response.data
+    dispatch(setAddsData(data))
+    dispatch(setSuccess(true))
+  } catch (err) {
+    dispatch(setError(err.error ?? 'Ошибка!'))
+  } finally {
+    dispatch(setLoading(false))
+  }
+}
+
+export const getUserAds = (id: string) => async (dispatch) => {
+  dispatch(setLoading(true))
+  try {
+    const response = await getUserAdsQuery(id)
     const { data } = response.data
     dispatch(setAddsData(data))
     dispatch(setSuccess(true))
