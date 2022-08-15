@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useInput from '../hooks/useInput'
-import { createAddQuery, updateAddQuery } from '../services'
+import { createAdQuery, updateAdQuery } from '../services'
 import {
   Box,
   Button,
@@ -45,10 +45,10 @@ const AdForm: FC = () => {
     return () => dispatch(clearData())
   }, [clearData, dispatch, location])
 
-  const createAddCallback = async (data) => {
+  const createAdCallback = async (data) => {
     setLoading(true)
     try {
-      await (isEditMode ? updateAddQuery : createAddQuery)(data)
+      await (isEditMode ? updateAdQuery : createAdQuery)(data)
       setSuccess(true)
     } catch (err) {
       const error =
@@ -87,7 +87,7 @@ const AdForm: FC = () => {
     for (const image of images) {
       formData.append('images', image.file)
     }
-    createAddCallback(formData)
+    createAdCallback(formData)
   }
 
   // TODO add text for update
@@ -99,7 +99,7 @@ const AdForm: FC = () => {
             Ваше объявление успешно создано!
             <br />
             Просмотреть все созданные объявления можно в разделе{' '}
-            <NavLink to={'/myAds'}>Мои объявления</NavLink>.
+            <NavLink to={`/ads/${UserId}`}>Мои объявления</NavLink>.
           </>
         }
       />

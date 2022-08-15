@@ -11,42 +11,60 @@ import {
   CardActionArea,
 } from '@material-ui/core'
 import { RootState } from '../store/configureStore'
-import { getAdds, getUserAds, clearData } from '../store/slices/addsSlice'
+import { getAds, getUserAds, clearData } from '../store/slices/adsSlice'
 import ContentWrapper from '../components/ContentWrapper'
+import { adsView } from '../static'
 
-const AddsList: FC = () => {
+const AdsList: FC = ({ mode }: { mode: string }) => {
   const { userId } = useParams<{ userId: string }>()
   const dispatch = useDispatch()
 
   const {
-    data: adds,
+    data: ads,
     isLoading,
     errorMessage,
     success,
-  } = useSelector((state: RootState) => state.adds)
+  } = useSelector((state: RootState) => state.ads)
+
+  const titleGenerate = () => {
+    switch (mode) {
+      case adsView.ALL_ADS:
+        return 'Объявления'
+      case adsView.USER_ADS:
+        return 'Мои объявления'
+      case adsView.FAVORITE_ADS:
+        return 'Избранное'
+    }
+  }
 
   useEffect((): (() => void) => {
-    if (userId) {
-      dispatch(getUserAds(userId))
-    } else {
-      dispatch(getAdds())
+    switch (mode) {
+      case adsView.ALL_ADS:
+        dispatch(getAds())
+        break
+      case adsView.USER_ADS:
+        dispatch(getUserAds(userId))
+        break
+      case adsView.FAVORITE_ADS:
+        dispatch(getUserAds(userId, true))
+        break
     }
 
     return () => dispatch(clearData())
-  }, [dispatch, getAdds, getUserAds, clearData, userId])
+  }, [dispatch, getAds, getUserAds, clearData, userId, mode])
 
   return (
     <Container component="main" maxWidth="md">
       <Box mt={3} mb={3}>
         <Typography variant="h2" component="h1" color="primary">
-          {userId ? 'Мои объявления' : 'Объявления'}
+          {titleGenerate()}
         </Typography>
       </Box>
       <ContentWrapper
         isLoading={isLoading}
         errorMessage={errorMessage}
-        isEmpty={!adds.length && success}
-        contentGeneratorCallback={() => adds.map(cardGenerator)}
+        isEmpty={!ads.length && success}
+        contentGeneratorCallback={() => ads.map(cardGenerator)}
       />
     </Container>
   )
@@ -85,4 +103,4 @@ function cardGenerator(add) {
   )
 }
 
-export default AddsList
+export default AdsList

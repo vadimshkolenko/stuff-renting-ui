@@ -1,13 +1,13 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import accountSlice from './slices/accountSlice'
-import addsSlice from './slices/addsSlice'
+import adsSlice from './slices/adsSlice'
 import adDetailSlice from './slices/adDetailSlice'
 import dealsSlice from './slices/dealsSlice'
 import notificationsSlice from './slices/notificationsSlice'
 
 const rootReducer = combineReducers({
   account: accountSlice,
-  adds: addsSlice,
+  ads: adsSlice,
   adDetail: adDetailSlice,
   deals: dealsSlice,
   notifications: notificationsSlice,

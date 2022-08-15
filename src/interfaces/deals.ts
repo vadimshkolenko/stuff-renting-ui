@@ -1,5 +1,5 @@
 export interface Deal {
-  AddId: number
+  AdId: number
   createdAt: string
   dateEnd: string
   dateStart: string

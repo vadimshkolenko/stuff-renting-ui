@@ -10,11 +10,11 @@ export const loginQuery = (userData) => api.post('/login', userData)
 // TODO переделать на get и не передавать токен (будет в куках)
 export const logoutQuery = (token) => api.post('/logout', token)
 
-export const createAddQuery = (addData) => api.post('/createAdd', addData)
+export const createAdQuery = (adData) => api.post('/createAd', adData)
 
-export const updateAddQuery = (addData) => api.patch('/updateAd', addData)
+export const updateAdQuery = (adData) => api.patch('/updateAd', adData)
 
-export const getAddsQuery = () => api.get('/getAdds')
+export const getAdsQuery = () => api.get('/getAds')
 
 export const getUserAdsQuery = (id) => api.get(`/getUserAds/${id}`)
 

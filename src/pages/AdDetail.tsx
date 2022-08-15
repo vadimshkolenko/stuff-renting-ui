@@ -159,20 +159,22 @@ const AdDetail: FC = () => {
                         {data.price}₽/сутки
                       </Typography>
                     </Box>
-                    <Box>
-                      <IconButton
-                        onClick={switchFavoriteCallback}
-                        size="medium"
-                        aria-label="show 4 new mails"
-                        color="inherit"
-                      >
-                        {data.isFavorite ? (
-                          <FavoriteIcon />
-                        ) : (
-                          <FavoriteBorderIcon />
-                        )}
-                      </IconButton>
-                    </Box>
+                    {data.UserId !== +UserId && (
+                      <Box>
+                        <IconButton
+                          onClick={switchFavoriteCallback}
+                          size="medium"
+                          aria-label="show 4 new mails"
+                          color="inherit"
+                        >
+                          {data.isFavorite ? (
+                            <FavoriteIcon />
+                          ) : (
+                            <FavoriteBorderIcon />
+                          )}
+                        </IconButton>
+                      </Box>
+                    )}
                   </Box>
                   <Box mt={2}>
                     <Stack direction="row" spacing={1}>

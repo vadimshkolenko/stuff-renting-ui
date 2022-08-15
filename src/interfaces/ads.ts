@@ -1,5 +1,5 @@
 export interface Image {
-  AddId: number
+  AdId: number
   createdAt: string
   destination: string
   encoding: string

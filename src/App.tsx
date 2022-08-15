@@ -12,11 +12,12 @@ import Registration from './pages/Registration'
 import Confirmation from './pages/Confirmation'
 import Login from './pages/Login'
 import AdForm from './pages/AdForm'
-import AddsList from './pages/AddsList'
-import AddDetail from './pages/AddDetail'
+import AdsList from './pages/AdsList'
+import AdDetail from './pages/AdDetail'
 import Deals from './pages/Deals'
 import Notifications from './pages/Notifications'
 import SuccessPayment from './pages/SuccessPayment'
+import { adsView } from './static'
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   if (!localStorage.getItem(token)) {
@@ -31,8 +32,19 @@ const App: FC = () => {
       <CssBaseline />
       <Header />
       <Routes>
-        <Route path="/" element={<AddsList />} />
-        <Route path="/ads/:userId" element={<AddsList />} />
+        <Route path="/" element={<AdsList mode={adsView.ALL_ADS} />} />
+        <Route
+          path="/ads/:userId"
+          element={<AdsList mode={adsView.USER_ADS} />}
+        />
+        <Route
+          path="/favorite/:userId"
+          element={
+            <RequireAuth>
+              <AdsList mode={adsView.FAVORITE_ADS} />
+            </RequireAuth>
+          }
+        />
         <Route
           path="/create-ad"
           element={
@@ -73,7 +85,7 @@ const App: FC = () => {
             </RequireAuth>
           }
         />
-        <Route path="/ad/:adId" element={<AddDetail />} />
+        <Route path="/ad/:adId" element={<AdDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/confirm/:verificationToken" element={<Confirmation />} />

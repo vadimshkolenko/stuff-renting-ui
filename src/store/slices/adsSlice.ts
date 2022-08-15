@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAddsQuery, getUserAdsQuery } from '../../services'
+import { getAdsQuery, getFavoriteQuery, getUserAdsQuery } from '../../services'
 import { Ad } from '../../interfaces/ads'
 
 interface State {
@@ -16,11 +16,11 @@ const initialState = {
   data: [],
 }
 
-const addsSlice = createSlice({
-  name: 'adds',
+const adsSlice = createSlice({
+  name: 'ads',
   initialState,
   reducers: {
-    setAddsData: (state: State, action: { payload: Array<Ad> }) => {
+    setAdsData: (state: State, action: { payload: Array<Ad> }) => {
       state.data = action.payload
     },
     setError: (state: State, action: { payload: string }) => {
@@ -39,12 +39,12 @@ const addsSlice = createSlice({
   },
 })
 
-export const getAdds = () => async (dispatch) => {
+export const getAds = () => async (dispatch) => {
   dispatch(setLoading(true))
   try {
-    const response = await getAddsQuery()
+    const response = await getAdsQuery()
     const { data } = response.data
-    dispatch(setAddsData(data))
+    dispatch(setAdsData(data))
     dispatch(setSuccess(true))
   } catch (err) {
     dispatch(setError(err.error ?? 'Ошибка!'))
@@ -53,21 +53,24 @@ export const getAdds = () => async (dispatch) => {
   }
 }
 
-export const getUserAds = (id: string) => async (dispatch) => {
-  dispatch(setLoading(true))
-  try {
-    const response = await getUserAdsQuery(id)
-    const { data } = response.data
-    dispatch(setAddsData(data))
-    dispatch(setSuccess(true))
-  } catch (err) {
-    dispatch(setError(err.error ?? 'Ошибка!'))
-  } finally {
-    dispatch(setLoading(false))
+export const getUserAds =
+  (id: string, isFavorite?: boolean) => async (dispatch) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await (isFavorite ? getFavoriteQuery : getUserAdsQuery)(
+        id
+      )
+      const { data } = response.data
+      dispatch(setAdsData(data))
+      dispatch(setSuccess(true))
+    } catch (err) {
+      dispatch(setError(err.error ?? 'Ошибка!'))
+    } finally {
+      dispatch(setLoading(false))
+    }
   }
-}
 
-export const { setAddsData, setError, setLoading, clearData, setSuccess } =
-  addsSlice.actions
+export const { setAdsData, setError, setLoading, clearData, setSuccess } =
+  adsSlice.actions
 
-export default addsSlice.reducer
+export default adsSlice.reducer

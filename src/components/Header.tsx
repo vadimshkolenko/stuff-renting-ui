@@ -117,7 +117,7 @@ const Header: FC = () => {
               aria-label="show 4 new mails"
               color="inherit"
               component={NavLink}
-              to="/favorite"
+              to={`/favorite/${UserId}`}
             >
               <FavoriteIcon />
             </IconButton>
