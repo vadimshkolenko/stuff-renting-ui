@@ -10,13 +10,6 @@ import {
 } from '@material-ui/core'
 import { Ad } from '../interfaces/ads'
 
-interface Props {
-  isLoading: boolean
-  errorMessage: string
-  isEmpty?: boolean
-  contentGeneratorCallback: () => JSX.Element | Array<JSX.Element>
-}
-
 const AdCard: FC<{ ad: Ad }> = ({ ad }) => {
   const mainImage = ad.Images.find((image) => image.isMain) ?? ad.Images[0]
   return (
