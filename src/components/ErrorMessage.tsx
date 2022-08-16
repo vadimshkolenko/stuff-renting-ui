@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { Box } from '@material-ui/core'
 import ErrorText from './ErrorText'
 
-const ErrorMessage = ({ message }) => {
+const ErrorMessage: FC<{ message: string }> = ({ message }) => {
   return (
     <Box
       sx={{

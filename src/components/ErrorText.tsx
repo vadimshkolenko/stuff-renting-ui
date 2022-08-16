@@ -1,7 +1,7 @@
-import React from 'react'
-import { Box, Typography } from '@material-ui/core'
+import React, { FC } from 'react'
+import { Typography } from '@material-ui/core'
 
-const ErrorText = ({ text }) => (
+const ErrorText: FC<{ text: string }> = ({ text }) => (
   <Typography variant="subtitle1" component="p" color="error">
     {text}
   </Typography>

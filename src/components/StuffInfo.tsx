@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Box, Grid, Typography, CardMedia } from '@material-ui/core'
 import { Ad } from '../interfaces/ads'
 
-const StuffInfo: FC = ({ data }: { data: Ad }) => {
+const StuffInfo: FC<{ data: Ad }> = ({ data }) => {
   return (
     <Grid item xs={8}>
       <CardMedia

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { Box, Typography } from '@material-ui/core'
 
-const RequestAnswerInfo = ({ content }: { content: JSX.Element }) => (
+const RequestAnswerInfo: FC<{ content: JSX.Element }> = ({ content }) => (
   <Box
     sx={{
       display: 'flex',
