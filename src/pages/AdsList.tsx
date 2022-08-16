@@ -1,21 +1,14 @@
 import React, { FC, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { NavLink, useParams } from 'react-router-dom'
-import {
-  Box,
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  CardActionArea,
-} from '@material-ui/core'
+import { useParams } from 'react-router-dom'
+import { Box, Container, Typography } from '@material-ui/core'
 import { RootState } from '../store/configureStore'
 import { getAds, getUserAds, clearData } from '../store/slices/adsSlice'
 import ContentWrapper from '../components/ContentWrapper'
+import AdCard from '../components/AdCard'
 import { adsView } from '../static'
 
-const AdsList: FC = ({ mode }: { mode: string }) => {
+const AdsList: FC<{ mode: adsView }> = ({ mode }) => {
   const { userId } = useParams<{ userId: string }>()
   const dispatch = useDispatch()
 
@@ -64,42 +57,11 @@ const AdsList: FC = ({ mode }: { mode: string }) => {
         isLoading={isLoading}
         errorMessage={errorMessage}
         isEmpty={!ads.length && success}
-        contentGeneratorCallback={() => ads.map(cardGenerator)}
+        contentGeneratorCallback={() =>
+          ads.map((ad) => <AdCard key={ad.id} ad={ad} />)
+        }
       />
     </Container>
-  )
-}
-
-function cardGenerator(add) {
-  const mainImage = add.Images.find((image) => image.isMain) ?? add.Images[0]
-  return (
-    <NavLink to={`/ad/${add.id}`} style={{ textDecoration: 'none' }}>
-      <Box mt={5}>
-        <Card>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              height="270"
-              image={`http://localhost:8080/${mainImage.filename}`}
-              alt={add.name}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {add.name}
-              </Typography>
-              <Typography gutterBottom variant="h5" component="div">
-                {add.price} ₽
-              </Typography>
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/*@ts-ignore*/}
-              <Typography variant="body2" color="text.secondary">
-                {add.description}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Box>
-    </NavLink>
   )
 }
 

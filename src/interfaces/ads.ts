@@ -11,6 +11,7 @@ export interface Image {
   path: string
   size: number
   updatedAt: string
+  isMain?: boolean
 }
 
 export interface Ad {

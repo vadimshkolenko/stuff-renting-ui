@@ -11,8 +11,8 @@ export const dealStatus = {
   COMPLETED: 'COMPLETED',
 }
 
-export const adsView = {
-  USER_ADS: 'USER_ADS',
-  ALL_ADS: 'ALL_ADS',
-  FAVORITE_ADS: 'FAVORITE_ADS',
+export enum adsView {
+  USER_ADS = 'USER_ADS',
+  ALL_ADS = 'ALL_ADS',
+  FAVORITE_ADS = 'FAVORITE_ADS',
 }
